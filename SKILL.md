@@ -67,8 +67,36 @@ approval decisions, and user feedback. Do not store raw API keys in these files.
 - External agent routes always include `/skill/hypergen`.
 - Do not call bare `/generate`, `/credits`, `/jobs`, or `/models` on the API origin.
 - Use `Authorization: Bearer $HYPERGEN_API_KEY`.
+- Prefer loading `HYPERGEN_API_KEY` from `$HOME/.hypergen/credentials.env` or the runtime's secret store. Do not print, echo, commit, or repeatedly paste API keys in polling/generation scripts.
 - Verify the key against the API host first: `GET ${HYPERGEN_API_BASE}/skill/hypergen/catalog`.
 - Do not mark the key invalid from hosted-doc failure alone. Only report it invalid after the API host's catalog or credits endpoint returns `401`/`403` with the same key. If hosted docs fail but catalog works, report docs unavailable and API key ready.
+
+## Global Credential Setup
+
+When shell access is available, store the key once and source it in future scripts:
+
+```bash
+mkdir -p "$HOME/.hypergen"
+umask 077
+cat > "$HOME/.hypergen/credentials.env" <<'HYPERGEN_CREDENTIALS'
+HYPERGEN_API_KEY="<YOUR_HYPERGEN_API_KEY>"
+HYPERGEN_API_BASE="https://api.hypercho.com"
+HYPERGEN_CREDENTIALS
+chmod 600 "$HOME/.hypergen/credentials.env"
+```
+
+For polling, generation, and hosted-doc downloads, start scripts with:
+
+```bash
+set -a
+[ -f "$HOME/.hypergen/credentials.env" ] && . "$HOME/.hypergen/credentials.env"
+[ -f ./.hypergen.env ] && . ./.hypergen.env
+set +a
+: "${HYPERGEN_API_KEY:?Missing HYPERGEN_API_KEY. Refresh the selected key in HyperGen.}"
+: "${HYPERGEN_API_BASE:=https://api.hypercho.com}"
+```
+
+Never show the raw key in status output. Never run these scripts with `set -x`.
 
 Common endpoints:
 
