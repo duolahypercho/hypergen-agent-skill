@@ -1,0 +1,25 @@
+{
+  "name": "@hypercho/hypergen-agent-skill",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "hypergen-agent": "./scripts/hypergen-agent.mjs"
+  },
+  "scripts": {
+    "check": "node scripts/hypergen-agent.mjs self-test",
+    "verify": "node scripts/hypergen-agent.mjs verify",
+    "updates": "bash scripts/check_updates.sh"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "SKILL.md",
+    "agents",
+    "hooks",
+    "references",
+    "scripts"
+  ],
+  "license": "MIT"
+}

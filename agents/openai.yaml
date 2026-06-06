@@ -1,0 +1,7 @@
+interface:
+  display_name: "HyperGen Agent"
+  short_description: "Generate HyperGen media with live API checks"
+  brand_color: "#111827"
+  default_prompt: "Use $hypergen-agent to load my HyperGen creator context, check for skill updates, verify credits, and generate an image with references if needed."
+policy:
+  allow_implicit_invocation: true
