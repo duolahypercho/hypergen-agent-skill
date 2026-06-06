@@ -34,6 +34,10 @@ prompt/exported context and report hosted docs unavailable.
 
 Use for Luna/influencer solo posts.
 
+Do not use product-on-model fields for this. The request must include
+`intent: "model-image"`. Use `scene` for the creative direction. `prompt` is
+allowed only as a full override when the user explicitly needs one.
+
 ```json
 {
   "intent": "model-image",
@@ -52,6 +56,20 @@ guidance. The model's saved images remain the identity reference. By default,
 model-only posts should use a blurry, grainy, low-light phone selfie /
 camera-roll style and can change clothing naturally unless the user asks to
 preserve the outfit.
+
+Never send these fields for model-only generation:
+
+```json
+{
+  "type": "product",
+  "solo": true,
+  "productImage": "<model reference>",
+  "productId": "<anything>"
+}
+```
+
+If a job response later shows `type: "product"` or `meta.solo: true`, treat that
+as backend storage metadata, not the request schema.
 
 ## Product-On-Model Image
 

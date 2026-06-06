@@ -44,6 +44,35 @@ Common endpoints:
 For payload details, read `references/api.md`.
 For image-reference behavior, read `references/image-references.md`.
 
+## Generation Decision Tree
+
+Use this before every paid generation request. Do not guess alternate flags.
+
+1. User wants the selected model/person alone, with no product:
+   - Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/generate`
+   - Required body fields: `intent: "model-image"`, `modelId`, `scene`
+   - Optional fields: `referenceImage`, `count`, `aspectRatio`, `modelChoice`, `look`
+   - Do not send `productImage`, `productId`, `type: "product"`, or `solo`.
+   - Do not probe random payloads after a validation error. Read `references/api.md` and retry this exact shape.
+
+2. User wants a model holding/wearing/using a product:
+   - Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/generate`
+   - Required body fields: `modelId` plus either `productImage` or `productId`
+   - Use `scene` for the creative direction.
+
+3. User wants a standalone business/product image:
+   - Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/generate`
+   - Required body fields: `intent: "product-image"`, `prompt` or `scene`
+   - Optional references: `images` or `productImage`.
+
+4. User wants video:
+   - Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/video`
+   - Use a completed image URL as the start image when possible.
+
+Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.
+That is a response/storage detail only. Never copy those internal fields into
+the request body.
+
 ## Hosted Agent Docs
 
 If the user provides a hosted agent prompt, download the docs and request catalog:
