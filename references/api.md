@@ -152,3 +152,29 @@ If the user provides their own media, upload it first:
 
 Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/uploads`. The response is
 an upload job; use its hosted `outputUrls` in drafts or video requests.
+
+## Auto-Generate Complete Post From A Job
+
+Use this when HyperGen should make the full post package after an image or video
+job completes.
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "channelIds": ["<POSTIZ_CHANNEL_ID>"],
+  "jobIds": ["<COMPLETED_IMAGE_OR_VIDEO_JOB_ID>"],
+  "productIds": []
+}
+```
+
+Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
+
+The backend will:
+
+- generate caption/title/hashtags,
+- resolve and upload the job media to Postiz,
+- create the Postiz draft,
+- return both the generated copy and draft.
+
+The agent should then review, enhance, ask for approval, schedule, publish, or
+regenerate based on the user's posting mode.

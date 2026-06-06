@@ -77,6 +77,13 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Required draft fields: `modelId`, `channelIds`, `caption` or `title`, and either `jobIds` or `mediaUrls`.
    - Do not create placeholder/test drafts to learn the schema. Use this exact shape.
 
+6. User wants HyperGen to create the whole post package:
+   - First generate the image or video job and poll until `status: "completed"`.
+   - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
+   - Required body fields: `modelId`, `channelIds`, and `jobIds`.
+   - HyperGen generates caption/hashtags, resolves/uploads the job media, and creates the Postiz draft.
+   - The agent's job after this is review: enhance the caption, ask for approval, schedule, publish, or regenerate.
+
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.
 That is a response/storage detail only. Never copy those internal fields into
 the request body.
