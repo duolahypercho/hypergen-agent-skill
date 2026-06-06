@@ -118,3 +118,37 @@ curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/jobs/$JOB_ID" \
 ```
 
 Return `outputUrls`, `videoUrl`, `creditsUsed`, and `status` from the job body.
+
+## Create Postiz Draft From A Job
+
+Use this after a generation job completes. Prefer `jobIds` so the backend
+resolves and uploads the generated media for Postiz.
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "channelIds": ["<POSTIZ_CHANNEL_ID>"],
+  "jobIds": ["<COMPLETED_JOB_ID>"],
+  "caption": "mirror check before the night winds down",
+  "hashtags": ["ootd", "mirrorselfie"]
+}
+```
+
+Do not create placeholder drafts while probing. The required fields are:
+`modelId`, `channelIds`, and either `jobIds` or `mediaUrls`; include `caption`
+or `title` for the post text.
+
+## Upload User Media
+
+If the user provides their own media, upload it first:
+
+```json
+{
+  "url": "data:image/jpeg;base64,...",
+  "kind": "image",
+  "name": "reference"
+}
+```
+
+Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/uploads`. The response is
+an upload job; use its hosted `outputUrls` in drafts or video requests.

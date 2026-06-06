@@ -38,6 +38,7 @@ Common endpoints:
 - Model context: `GET ${HYPERGEN_API_BASE}/skill/hypergen/models/:modelId`
 - Image generation: `POST ${HYPERGEN_API_BASE}/skill/hypergen/generate`
 - Video generation: `POST ${HYPERGEN_API_BASE}/skill/hypergen/video`
+- Upload user media: `POST ${HYPERGEN_API_BASE}/skill/hypergen/uploads`
 - Job polling: `GET ${HYPERGEN_API_BASE}/skill/hypergen/jobs/:id`
 - Postiz draft: `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/drafts`
 
@@ -68,6 +69,13 @@ Use this before every paid generation request. Do not guess alternate flags.
 4. User wants video:
    - Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/video`
    - Use a completed image URL as the start image when possible.
+
+5. User wants to make a Postiz draft from a generated image:
+   - First poll the generation job until `status: "completed"`.
+   - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/drafts`.
+   - Prefer `jobIds: ["<JOB_ID>"]` over manually copying `mediaUrls`. The backend will resolve the job's media and upload it to Postiz.
+   - Required draft fields: `modelId`, `channelIds`, `caption` or `title`, and either `jobIds` or `mediaUrls`.
+   - Do not create placeholder/test drafts to learn the schema. Use this exact shape.
 
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.
 That is a response/storage detail only. Never copy those internal fields into
