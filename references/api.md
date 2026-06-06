@@ -37,12 +37,16 @@ Use for Luna/influencer solo posts.
   "referenceImage": "https://example.com/pose-or-style-reference.jpg",
   "count": 1,
   "aspectRatio": "4:5",
+  "modelChoice": "grok",
   "look": "natural"
 }
 ```
 
 `referenceImage` is optional and is used for pose, composition, or background
-guidance. The model's saved images remain the identity reference.
+guidance. The model's saved images remain the identity reference. By default,
+model-only posts should use a blurry, grainy, low-light phone selfie /
+camera-roll style and can change clothing naturally unless the user asks to
+preserve the outfit.
 
 ## Product-On-Model Image
 
@@ -53,12 +57,14 @@ guidance. The model's saved images remain the identity reference.
   "scene": "holding it in soft window light",
   "count": 2,
   "aspectRatio": "4:5",
+  "modelChoice": "grok",
   "look": "natural"
 }
 ```
 
 If `productId` is supplied instead of `productImage`, saved product angles become
-references automatically.
+references automatically. Business/product imagery should stay cleaner and more
+polished than model-only selfie posts, with accurate product details.
 
 ## General Image With References
 
@@ -73,7 +79,8 @@ Use for image-to-image work without a saved model identity.
     "https://example.com/composition-reference.jpg"
   ],
   "count": 1,
-  "aspectRatio": "4:5"
+  "aspectRatio": "4:5",
+  "modelChoice": "grok"
 }
 ```
 

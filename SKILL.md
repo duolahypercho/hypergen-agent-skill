@@ -68,6 +68,13 @@ Treat `hypergen.requests.json` as authoritative when present.
 6. After creating a job, poll until `completed` or `failed`.
 7. Return real job IDs, credit usage, and media URLs only from live API responses.
 
+## Generation Defaults
+
+- Use Grok for ordinary image generation/editing unless the user is creating a new people-specific reusable model identity.
+- Model-only posts default to blurry low-light phone selfie / camera-roll style: close cropped, soft focus, visible grain/noise, imperfect indoor light, compressed phone texture, and slightly off-center framing.
+- Model clothing can differ naturally between posts like a real person; preserve the exact outfit only when the user asks for outfit continuity.
+- Business/product posts default to cleaner polished UGC or catalog-quality product imagery with accurate product shape, colors, materials, logos, and scale. Do not apply the blurry model-selfie default to business/product shots unless requested.
+
 ## Safety
 
 - Never fabricate media URLs, job IDs, credits, channels, or Postiz IDs.

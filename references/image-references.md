@@ -9,8 +9,15 @@ For saved model generation:
 
 - `intent: "model-image"` automatically sends the model's saved reference
   images to lock identity.
+- Model-only posts default to a blurry, low-light, close-cropped phone selfie /
+  camera-roll look with soft focus, visible grain/noise, imperfect indoor light,
+  and slightly off-center framing.
+- Clothing should vary naturally between posts like a real person unless the
+  user explicitly asks to preserve the exact outfit.
 - Product-on-model generation automatically sends the model references plus the
   supplied `productImage` or saved `productId` angles.
+- Business/product posts use a cleaner polished UGC or catalog/product style
+  with accurate product details, not the blurry model-selfie default.
 
 The agent does not need to invent a style reference when the user only wants the
 same model or product identity.
