@@ -22,6 +22,45 @@ This is a skill-level preflight. Plain Codex skills cannot automatically execute
 before every chat by themselves. Runtimes that support hooks can wire
 `hooks/pre-chat.sh` to call the same update check.
 
+## Workspace File Structure
+
+When the runtime has filesystem access, create this structure inside the fresh
+creator-agent folder:
+
+```text
+.
+|-- soul.md
+|-- agents.md or claude.md
+|-- hypergen.requests.json
+|-- memory/
+|   |-- profile.md
+|   |-- preferences.md
+|   `-- approvals.md
+|-- references/
+|   |-- model/
+|   |-- product/
+|   `-- style/
+|-- posts/
+|   |-- drafts/
+|   |-- approved/
+|   |-- published/
+|   `-- rejected/
+|-- jobs/
+|   |-- images/
+|   `-- videos/
+|-- captions/
+|-- postiz/
+|   |-- drafts/
+|   `-- channels.md
+`-- logs/
+    |-- api-calls.md
+    `-- decisions.md
+```
+
+Use these folders as lightweight memory, not as a replacement for live API
+checks. Store generated job IDs, media URLs, captions, Postiz draft IDs,
+approval decisions, and user feedback. Do not store raw API keys in these files.
+
 ## Required API Rules
 
 - `HYPERGEN_API_BASE` defaults to `https://api.hypercho.com`.
