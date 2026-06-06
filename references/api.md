@@ -25,6 +25,11 @@ curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/credits" \
 
 Expected unauthenticated response is JSON `401`, not `404`.
 
+Always verify the key with the API host before judging hosted docs. A 401 from
+`https://hypergen.hypercho.com/agents/...` alone is not enough to call the key
+invalid. If catalog or credits works but hosted docs fail, continue from the
+prompt/exported context and report hosted docs unavailable.
+
 ## Model-Only Image
 
 Use for Luna/influencer solo posts.

@@ -28,6 +28,8 @@ before every chat by themselves. Runtimes that support hooks can wire
 - External agent routes always include `/skill/hypergen`.
 - Do not call bare `/generate`, `/credits`, `/jobs`, or `/models` on the API origin.
 - Use `Authorization: Bearer $HYPERGEN_API_KEY`.
+- Verify the key against the API host first: `GET ${HYPERGEN_API_BASE}/skill/hypergen/catalog`.
+- Do not mark the key invalid from hosted-doc failure alone. Only report it invalid after the API host's catalog or credits endpoint returns `401`/`403` with the same key. If hosted docs fail but catalog works, report docs unavailable and API key ready.
 
 Common endpoints:
 
@@ -61,12 +63,13 @@ Treat `hypergen.requests.json` as authoritative when present.
 ## Workflow
 
 1. Run the update preflight.
-2. Load hosted docs/catalog if credentials and IDs are available.
-3. Verify API key with catalog, credits, and active model/product reads.
-4. Before paid generation, show the request body and credit cost if known.
-5. Ask before spending credits unless the user explicitly authorized generation.
-6. After creating a job, poll until `completed` or `failed`.
-7. Return real job IDs, credit usage, and media URLs only from live API responses.
+2. Verify API key with catalog on the API host.
+3. Load hosted docs/catalog if credentials and IDs are available.
+4. Check credits and active model/product reads.
+5. Before paid generation, show the request body and credit cost if known.
+6. Ask before spending credits unless the user explicitly authorized generation.
+7. After creating a job, poll until `completed` or `failed`.
+8. Return real job IDs, credit usage, and media URLs only from live API responses.
 
 ## Generation Defaults
 

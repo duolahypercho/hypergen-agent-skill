@@ -143,6 +143,7 @@ async function downloadDocs(args) {
   if (!modelId) throw new Error("--model-id or HYPERGEN_MODEL_ID is required");
   const outDir = resolve(parseFlag(args, "--out") || process.cwd());
   mkdirSync(outDir, { recursive: true });
+  await api(`${API_PREFIX}/catalog`);
 
   const files = {
     "soul.md": `/agents/${encodeURIComponent(modelId)}/soul.md`,
