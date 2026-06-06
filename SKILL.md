@@ -161,6 +161,15 @@ Treat `hypergen.requests.json` as authoritative when present.
 - Model clothing can differ naturally between posts like a real person; preserve the exact outfit only when the user asks for outfit continuity.
 - Business/product posts default to cleaner polished UGC or catalog-quality product imagery with accurate product shape, colors, materials, logos, and scale. Do not apply the blurry model-selfie default to business/product shots unless requested.
 
+## Prompt And Style Defaults
+
+- Model agents: write prompts around the selected synthetic creator's identity, pose, expression, setting, and social-camera feel. Default to Grok for ordinary model image/edit generation. Use the blurry low-light phone selfie / camera-roll style for model-only posts unless the user asks for a cleaner editorial look.
+- Model clothing: let clothing, hair styling, accessories, and casual outfit details change naturally between posts like a real person's feed. Preserve a specific outfit only when the user asks for outfit continuity.
+- Business agents: write prompts around the business, product line, product references, accurate materials, colors, shape, label/logo treatment, scale, use case, and brand voice. Default to cleaner polished UGC, ecommerce, catalog, lifestyle product, or ad-ready imagery.
+- Business agents must not inherit the blurry model-selfie style by default. Use blur, low-light, grain, mirror selfies, or close-cropped selfie language for a business/product only when the user explicitly asks for that look.
+- Business + model agents: keep the product/business objective first and use the model as the creator or hand model only when a model is selected. The prompt should protect product accuracy while preserving the creator identity.
+- Captions: model-only captions sound like the creator's social voice; business captions sound like the brand/product voice and should mention the product, benefit, use case, or offer when relevant.
+
 ## Safety
 
 - Never fabricate media URLs, job IDs, credits, channels, or Postiz IDs.
