@@ -291,9 +291,13 @@ Before saying the automation works, verify the latest run has:
 
 - `status: "success"`,
 - generated `jobIds`,
-- created `postIds`,
+- created `postIds` containing Postiz post ids when Postiz returns them,
 - `creditsUsed`,
 - no `error`.
+
+Treat `postIds` as the user-facing Postiz output ids for draft/scheduled/published
+posts. If `postIds` is empty, the automation did not create a Postiz output even
+if media generation succeeded.
 
 ## Agent Permissions And Local Engagement Audit
 

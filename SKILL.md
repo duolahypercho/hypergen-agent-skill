@@ -235,7 +235,7 @@ Use this before every paid generation request. Do not guess alternate flags.
 ```
 
    - Do not claim employee mode is enabled until the PUT response and a follow-up GET confirm `enabled: true`.
-   - Do not claim a test worked until the run history shows `status: "success"` and includes job/post IDs.
+   - Do not claim a test worked until the run history shows `status: "success"`, generated `jobIds`, and `postIds` containing the Postiz output ids for the draft/scheduled/published post.
 
 8. User wants the agent to do social engagement too:
    - Install the engagement add-on inside the creator-agent workspace:
@@ -321,7 +321,7 @@ Use this checklist before telling the user automatic posting is production-ready
 7. `PUT /skill/hypergen/agent-automations` returns the saved mode, content type, caps, `nextRunAt`, and `nextPostAt`.
 8. `GET /skill/hypergen/agent-automations?modelId=:modelId` confirms the saved values.
 9. If the user approved a test, `POST /skill/hypergen/agent-automations/:id/run` returns a run.
-10. `GET /skill/hypergen/agent-automations/:id/runs` shows the run result, credits, job IDs, post IDs, and any error.
+10. `GET /skill/hypergen/agent-automations/:id/runs` shows the run result, credits, generated job IDs, Postiz output IDs in `postIds`, and any error.
 11. `GET /skill/hypergen/agent-status?modelId=:modelId` reflects the new requests/media/posts totals and the latest `runner` heartbeat.
 
 ## Generation Defaults
