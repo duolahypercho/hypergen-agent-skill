@@ -45,6 +45,8 @@ const commands = {
   "check-permission": checkPermission,
   events,
   "log-event": logEvent,
+  draft,
+  "post-from-job": postFromJob,
   generate,
   poll,
   "self-test": selfTest,
@@ -86,6 +88,8 @@ Usage:
   hypergen-agent check-permission --body payload.json
   hypergen-agent events [--model-id ID] [--product-id ID]
   hypergen-agent log-event --body payload.json
+  hypergen-agent draft --body payload.json [--dry-run]
+  hypergen-agent post-from-job --body payload.json [--dry-run]
   hypergen-agent generate --body payload.json
   hypergen-agent poll --job-id ID
   hypergen-agent self-test
@@ -474,6 +478,48 @@ async function logEvent(args) {
   console.log(JSON.stringify(result, null, 2));
 }
 
+async function draft(args) {
+  const bodyFile = parseFlag(args, "--body");
+  if (!bodyFile) throw new Error("--body payload.json is required");
+  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  if (args.includes("--dry-run")) {
+    console.log(
+      JSON.stringify(
+        { method: "POST", path: `${API_PREFIX}/postiz/drafts`, body },
+        null,
+        2
+      )
+    );
+    return;
+  }
+  const result = await api(`${API_PREFIX}/postiz/drafts`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function postFromJob(args) {
+  const bodyFile = parseFlag(args, "--body");
+  if (!bodyFile) throw new Error("--body payload.json is required");
+  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  if (args.includes("--dry-run")) {
+    console.log(
+      JSON.stringify(
+        { method: "POST", path: `${API_PREFIX}/postiz/posts/from-job`, body },
+        null,
+        2
+      )
+    );
+    return;
+  }
+  const result = await api(`${API_PREFIX}/postiz/posts/from-job`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
 async function generate(args) {
   const bodyFile = parseFlag(args, "--body");
   if (!bodyFile) throw new Error("--body payload.json is required");
@@ -514,6 +560,8 @@ async function selfTest() {
     ["README.md", "hypergen-agent status --model-id"],
     ["README.md", "hypergen-agent channels --model-id"],
     ["README.md", "hypergen-agent runner-status"],
+    ["README.md", "hypergen-agent draft --body draft.json --dry-run"],
+    ["README.md", "hypergen-agent post-from-job --body post-from-job.json --dry-run"],
     ["README.md", "baseline `hypergen.requests.json`"],
     ["README.md", "## Suggested Workspace Structure"],
     ["README.md", "references/style/"],
@@ -534,6 +582,8 @@ async function selfTest() {
     ["SKILL.md", "Never include cookies, passwords, API keys"],
     ["SKILL.md", "agent-runner-status"],
     ["SKILL.md", "Postiz output ids"],
+    ["SKILL.md", "draft --body draft.json --dry-run"],
+    ["SKILL.md", "post-from-job --body post-from-job.json --dry-run"],
     ["SKILL.md", "Use Grok for ordinary image generation/editing"],
     ["SKILL.md", "Hashtags: hard cap at 3"],
     ["SKILL.md", "Never use AI/self-labeling"],
@@ -561,6 +611,10 @@ async function selfTest() {
     ["scripts/hypergen-agent.mjs", "channels"],
     ["scripts/hypergen-agent.mjs", "runnerStatus"],
     ["scripts/hypergen-agent.mjs", "reportRunnerStatus"],
+    ["scripts/hypergen-agent.mjs", "draft"],
+    ["scripts/hypergen-agent.mjs", "postFromJob"],
+    ["scripts/hypergen-agent.mjs", "postiz/drafts"],
+    ["scripts/hypergen-agent.mjs", "postiz/posts/from-job"],
     ["scripts/hypergen-agent.mjs", "parseSocialSession"],
     ["scripts/hypergen-agent.mjs", "args.includes(\"--dry-run\")"],
     ["scripts/hypergen-agent.mjs", "error instanceof Error ? error.message"],

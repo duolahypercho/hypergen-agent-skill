@@ -189,6 +189,7 @@ Use this before every paid generation request. Do not guess alternate flags.
 5. User wants to make a Postiz draft from a generated image:
    - First poll the generation job until `status: "completed"`.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/drafts`.
+   - CLI shortcut: `node scripts/hypergen-agent.mjs draft --body draft.json --dry-run`, then remove `--dry-run` after approval.
    - Prefer `jobIds: ["<JOB_ID>"]` over manually copying `mediaUrls`. The backend will resolve the job's media and upload it to Postiz.
    - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.
    - Final status reports should stay simple: list the completed job, credits used, saved output if available, and posting result such as Draft only / scheduled / published. Include a media handoff note only when a live Postiz API call actually failed.
@@ -198,6 +199,7 @@ Use this before every paid generation request. Do not guess alternate flags.
 6. User wants HyperGen to create the whole post package:
    - First generate the image or video job and poll until `status: "completed"`.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
+   - CLI shortcut: `node scripts/hypergen-agent.mjs post-from-job --body post-from-job.json --dry-run`, then remove `--dry-run` after approval.
    - Required body fields: `modelId`, `channelIds`, and `jobIds`.
    - HyperGen generates caption/hashtags, resolves/uploads the job media, and creates the Postiz draft.
    - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.

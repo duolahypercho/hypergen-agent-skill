@@ -152,6 +152,20 @@ Poll a job:
 hypergen-agent poll --job-id <JOB_ID>
 ```
 
+Create a Postiz draft from completed generated media:
+
+```bash
+hypergen-agent draft --body draft.json --dry-run
+hypergen-agent draft --body draft.json
+```
+
+Create a complete post package from a completed job:
+
+```bash
+hypergen-agent post-from-job --body post-from-job.json --dry-run
+hypergen-agent post-from-job --body post-from-job.json
+```
+
 Review employee-mode automation:
 
 ```bash
@@ -285,6 +299,26 @@ Do not create placeholder drafts to learn the schema.
   "hashtags": ["fyp"]
 }
 ```
+
+Use `hypergen-agent draft --body draft.json --dry-run` to review the exact
+draft request without mutating Postiz. Remove `--dry-run` only after the user
+has approved draft creation.
+
+For a complete generated post package where HyperGen writes the caption and
+hashtags too:
+
+```json
+{
+  "modelId": "<MODEL_ID>",
+  "channelIds": ["<POSTIZ_CHANNEL_ID>"],
+  "jobIds": ["<COMPLETED_JOB_ID>"],
+  "productIds": []
+}
+```
+
+Use `hypergen-agent post-from-job --body post-from-job.json --dry-run` to review
+the request first. Remove `--dry-run` only after the user has approved creating
+the Postiz output.
 
 Hashtags are optional and capped at 3. Prefer no hashtags or only `#fyp` for
 model-only lifestyle posts. Never use AI/self-labeling tags such as
