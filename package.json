@@ -16,6 +16,7 @@
   },
   "files": [
     "SKILL.md",
+    "hypergen.requests.json",
     "agents",
     "hooks",
     "references",

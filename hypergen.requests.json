@@ -1,0 +1,399 @@
+[
+  {
+    "id": "hello",
+    "mcpTool": "hypergen_hello",
+    "method": "GET",
+    "path": "/skill/hypergen/hello",
+    "purpose": "Safe first authenticated API call. Use ?message=hello during setup.",
+    "confirmation": "none"
+  },
+  {
+    "id": "catalog",
+    "mcpTool": "hypergen_catalog",
+    "method": "GET",
+    "path": "/skill/hypergen/catalog",
+    "purpose": "List available generation engines and provider status.",
+    "confirmation": "none"
+  },
+  {
+    "id": "credits",
+    "mcpTool": "hypergen_get_credits",
+    "method": "GET",
+    "path": "/skill/hypergen/credits",
+    "purpose": "Read current credit balance before paid actions.",
+    "confirmation": "none"
+  },
+  {
+    "id": "models_list",
+    "mcpTool": "hypergen_list_models",
+    "method": "GET",
+    "path": "/skill/hypergen/models",
+    "purpose": "List reusable synthetic creator models.",
+    "confirmation": "none"
+  },
+  {
+    "id": "models_get",
+    "mcpTool": "hypergen_get_model",
+    "method": "GET",
+    "path": "/skill/hypergen/models/:modelId",
+    "purpose": "Fetch one reusable synthetic creator model.",
+    "confirmation": "none"
+  },
+  {
+    "id": "models_create",
+    "mcpTool": "hypergen_create_model",
+    "method": "POST",
+    "path": "/skill/hypergen/models",
+    "purpose": "Generate a new reusable synthetic creator model.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "models_upload",
+    "mcpTool": "hypergen_upload_model",
+    "method": "POST",
+    "path": "/skill/hypergen/models/upload",
+    "purpose": "Register a reusable model from existing reference image URLs.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "models_update",
+    "mcpTool": "hypergen_update_model",
+    "method": "PATCH",
+    "path": "/skill/hypergen/models/:modelId",
+    "purpose": "Update model name, personality, reference URLs, or thumbnail.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "models_delete",
+    "mcpTool": "hypergen_delete_model",
+    "method": "DELETE",
+    "path": "/skill/hypergen/models/:modelId",
+    "purpose": "Delete a reusable model.",
+    "confirmation": "delete"
+  },
+  {
+    "id": "model_grid",
+    "mcpTool": "hypergen_create_model_grid",
+    "method": "POST",
+    "path": "/skill/hypergen/models/:modelId/grid",
+    "purpose": "Create a 3x3 identity showcase grid for a model.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "products_list",
+    "mcpTool": "hypergen_list_businesses",
+    "method": "GET",
+    "path": "/skill/hypergen/products",
+    "purpose": "List reusable businesses and product identities.",
+    "confirmation": "none"
+  },
+  {
+    "id": "products_get",
+    "mcpTool": "hypergen_get_business",
+    "method": "GET",
+    "path": "/skill/hypergen/products/:productId",
+    "purpose": "Fetch one reusable business/product identity.",
+    "confirmation": "none"
+  },
+  {
+    "id": "products_create",
+    "mcpTool": "hypergen_create_business",
+    "method": "POST",
+    "path": "/skill/hypergen/products",
+    "purpose": "Create a reusable business with product references and brand voice.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "products_update",
+    "mcpTool": "hypergen_update_business",
+    "method": "PATCH",
+    "path": "/skill/hypergen/products/:productId",
+    "purpose": "Update business profile, brand voice, product lines, or references.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "products_delete",
+    "mcpTool": "hypergen_delete_business",
+    "method": "DELETE",
+    "path": "/skill/hypergen/products/:productId",
+    "purpose": "Delete a reusable business.",
+    "confirmation": "delete"
+  },
+  {
+    "id": "product_angles",
+    "mcpTool": "hypergen_generate_product_angles",
+    "method": "POST",
+    "path": "/skill/hypergen/products/:productId/angles",
+    "purpose": "Generate additional product reference angles.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "suggest_profile",
+    "mcpTool": "hypergen_suggest_business_profile",
+    "method": "POST",
+    "path": "/skill/hypergen/products/suggest-profile",
+    "purpose": "Suggest business description, selling point, brand voice, and product lines.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "generate",
+    "mcpTool": "hypergen_generate_image",
+    "method": "POST",
+    "path": "/skill/hypergen/generate",
+    "purpose": "Generate product-on-model, model-only, or product packshot images. Before approval, quote cost only from the live catalog model creditCost; otherwise say cost unknown.",
+    "confirmation": "credits",
+    "notes": [
+      "Use modelChoice=\"grok\" for ordinary image generation/editing unless creating a new people-specific reusable model identity.",
+      "For intent=\"model-image\", default to blurry low-light phone selfie / camera-roll style and let clothing vary naturally unless the user asks for outfit continuity.",
+      "For business/product shots, use cleaner polished UGC or catalog-quality product imagery with accurate product details."
+    ]
+  },
+  {
+    "id": "video",
+    "mcpTool": "hypergen_generate_video",
+    "method": "POST",
+    "path": "/skill/hypergen/video",
+    "purpose": "Generate vertical video from a start image and optional end image. Before approval, quote cost only from the live catalog model creditCost and duration rules; otherwise say cost unknown.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "surprise",
+    "mcpTool": "hypergen_surprise_prompt",
+    "method": "POST",
+    "path": "/skill/hypergen/surprise",
+    "purpose": "Generate a context-aware prompt idea.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "uploads",
+    "mcpTool": "hypergen_upload_media",
+    "method": "POST",
+    "path": "/skill/hypergen/uploads",
+    "purpose": "Persist user media as upload jobs without generation credits.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "jobs_list",
+    "mcpTool": "hypergen_list_jobs",
+    "method": "GET",
+    "path": "/skill/hypergen/jobs",
+    "purpose": "List jobs, optionally filtered by type, modelId, or productId.",
+    "confirmation": "none"
+  },
+  {
+    "id": "jobs_get",
+    "mcpTool": "hypergen_get_job",
+    "method": "GET",
+    "path": "/skill/hypergen/jobs/:id",
+    "purpose": "Poll one job until completed or failed.",
+    "confirmation": "none"
+  },
+  {
+    "id": "jobs_delete",
+    "mcpTool": "hypergen_delete_job",
+    "method": "DELETE",
+    "path": "/skill/hypergen/jobs/:id",
+    "purpose": "Delete a generated job/media record.",
+    "confirmation": "delete"
+  },
+  {
+    "id": "stats",
+    "mcpTool": "hypergen_usage_stats",
+    "method": "GET",
+    "path": "/skill/hypergen/stats",
+    "purpose": "Read usage statistics.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_status",
+    "mcpTool": "hypergen_agent_status",
+    "method": "GET",
+    "path": "/skill/hypergen/agent-status",
+    "purpose": "Read API-key activity, output totals, and local runner summary. Connected means API-key activity only.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_runner_status",
+    "mcpTool": "hypergen_get_agent_runner_status",
+    "method": "GET",
+    "path": "/skill/hypergen/agent-runner-status",
+    "purpose": "Read safe local runner/browser/social-session readiness. This never includes cookies or platform session tokens.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_runner_status_save",
+    "mcpTool": "hypergen_save_agent_runner_status",
+    "method": "PUT",
+    "path": "/skill/hypergen/agent-runner-status",
+    "purpose": "Report local runtime heartbeat, browser permission status, and social login status after local verification.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "agent_permissions",
+    "mcpTool": "hypergen_get_agent_permissions",
+    "method": "GET",
+    "path": "/skill/hypergen/agent-permissions",
+    "purpose": "Read saved posting and local engagement delegation policy.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_permissions_save",
+    "mcpTool": "hypergen_save_agent_permissions",
+    "method": "PUT",
+    "path": "/skill/hypergen/agent-permissions",
+    "purpose": "Save posting and local engagement policy, limits, and approval modes.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "agent_permissions_check",
+    "mcpTool": "hypergen_check_agent_permission",
+    "method": "POST",
+    "path": "/skill/hypergen/agent-permissions/check",
+    "purpose": "Check whether a local posting or engagement action is allowed before acting.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_events",
+    "mcpTool": "hypergen_list_agent_events",
+    "method": "GET",
+    "path": "/skill/hypergen/agent-events",
+    "purpose": "List local-agent action audit events.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_events_log",
+    "mcpTool": "hypergen_log_agent_event",
+    "method": "POST",
+    "path": "/skill/hypergen/agent-events",
+    "purpose": "Log every real local action or skipped local action after a permission check.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "agent_automations",
+    "mcpTool": "hypergen_list_agent_automations",
+    "method": "GET",
+    "path": "/skill/hypergen/agent-automations",
+    "purpose": "List employee-mode automations and latest status.",
+    "confirmation": "none"
+  },
+  {
+    "id": "agent_automations_save",
+    "mcpTool": "hypergen_save_agent_automation",
+    "method": "PUT",
+    "path": "/skill/hypergen/agent-automations",
+    "purpose": "Create or update employee-mode automation for draft, schedule, or publish.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "agent_automation_run",
+    "mcpTool": "hypergen_run_agent_automation",
+    "method": "POST",
+    "path": "/skill/hypergen/agent-automations/:id/run",
+    "purpose": "Run one user-approved paid employee-mode automation test.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "agent_automation_runs",
+    "mcpTool": "hypergen_list_agent_automation_runs",
+    "method": "GET",
+    "path": "/skill/hypergen/agent-automations/:id/runs",
+    "purpose": "Review employee-mode run history, credits, jobs, captions, Postiz ids, and errors.",
+    "confirmation": "none"
+  },
+  {
+    "id": "postiz_status",
+    "mcpTool": "hypergen_social_status",
+    "method": "GET",
+    "path": "/skill/hypergen/postiz/oauth/status",
+    "purpose": "Check social publishing connection status.",
+    "confirmation": "none"
+  },
+  {
+    "id": "postiz_channels",
+    "mcpTool": "hypergen_list_social_channels",
+    "method": "GET",
+    "path": "/skill/hypergen/postiz/models/:modelId/channels",
+    "purpose": "List available social channels and model bindings.",
+    "confirmation": "none"
+  },
+  {
+    "id": "postiz_bind_channels",
+    "mcpTool": "hypergen_bind_social_channels",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/models/:modelId/channels",
+    "purpose": "Bind selected social channels to a model.",
+    "confirmation": "mutate"
+  },
+  {
+    "id": "postiz_caption",
+    "mcpTool": "hypergen_generate_caption",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/caption",
+    "purpose": "Generate platform captions, titles, sparse hashtags, and posting hints. Hashtags are capped at 3; avoid AI/self-labeling tags and hashtag-only captions.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "postiz_draft",
+    "mcpTool": "hypergen_create_social_draft",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/drafts",
+    "purpose": "Create a draft, scheduled, or immediate social post.",
+    "confirmation": "publish"
+  },
+  {
+    "id": "postiz_post_from_job",
+    "mcpTool": "hypergen_create_social_post_from_job",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/posts/from-job",
+    "purpose": "Generate caption/hashtags and create a complete social post package from completed generated media jobIds.",
+    "confirmation": "publish"
+  },
+  {
+    "id": "postiz_schedule",
+    "mcpTool": "hypergen_schedule_social_post",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/posts/:postId/schedule",
+    "purpose": "Schedule an existing social post.",
+    "confirmation": "publish"
+  },
+  {
+    "id": "postiz_list_posts",
+    "mcpTool": "hypergen_list_social_posts",
+    "method": "GET",
+    "path": "/skill/hypergen/postiz/posts",
+    "purpose": "List draft, scheduled, and published social posts.",
+    "confirmation": "none"
+  },
+  {
+    "id": "postiz_generate_posts",
+    "mcpTool": "hypergen_generate_social_posts",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/posts/generate",
+    "purpose": "Generate several social post drafts from model images.",
+    "confirmation": "credits"
+  },
+  {
+    "id": "postiz_plan_campaign",
+    "mcpTool": "hypergen_plan_campaign",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/campaign/plan",
+    "purpose": "Plan a multi-post campaign for review without writing to Postiz.",
+    "confirmation": "none"
+  },
+  {
+    "id": "postiz_launch_campaign",
+    "mcpTool": "hypergen_launch_campaign",
+    "method": "POST",
+    "path": "/skill/hypergen/postiz/campaign/launch",
+    "purpose": "Schedule a planned campaign through Postiz.",
+    "confirmation": "publish"
+  },
+  {
+    "id": "postiz_shoppable",
+    "mcpTool": "hypergen_get_shoppable_links",
+    "method": "GET",
+    "path": "/skill/hypergen/postiz/posts/:postId/shoppable",
+    "purpose": "Read shoppable product links attached to a social post.",
+    "confirmation": "none"
+  }
+]

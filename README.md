@@ -97,6 +97,43 @@ confirm scheduling/publishing is possible before saving employee mode.
 `runner-status` reads the latest local runner heartbeat without writing or
 claiming browser/social permission.
 
+This repo ships a baseline `hypergen.requests.json` so an installed skill has
+the current endpoint map even before hosted docs are downloaded. If
+`download-docs` writes a model/business-specific `hypergen.requests.json`, treat
+that downloaded file as authoritative for that workspace.
+
+## Suggested Workspace Structure
+
+When a runtime has filesystem access, keep each creator-agent in a fresh folder:
+
+```text
+agent-workspace/
+|-- .hypergen.env
+|-- soul.md
+|-- skill.md
+|-- agents.md or claude.md
+|-- hypergen.requests.json
+|-- references/
+|   |-- model/
+|   |-- product/
+|   `-- style/
+|-- jobs/
+|   |-- images/
+|   `-- videos/
+|-- posts/
+|   |-- drafts/
+|   |-- scheduled/
+|   `-- published/
+|-- engagement/
+|   `-- logs/
+`-- memory/
+```
+
+Use `references/style/` for user-provided style examples, `jobs/` for generated
+media records, `posts/` for captions/Postiz IDs, and `engagement/logs/` for
+local browser engagement reports. Never store raw API keys, cookies, passwords,
+OAuth tokens, or platform session tokens in the workspace.
+
 The API host is `https://api.hypercho.com` and agent routes use
 `/skill/hypergen`. Do not call bare `/generate`, `/credits`, `/jobs`, or
 `/models` on the API origin.

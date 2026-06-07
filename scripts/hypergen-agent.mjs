@@ -496,6 +496,7 @@ async function selfTest() {
   const checks = [
     "README.md",
     "SKILL.md",
+    "hypergen.requests.json",
     "references/api.md",
     "references/image-references.md",
     "references/engagement.md",
@@ -513,6 +514,9 @@ async function selfTest() {
     ["README.md", "hypergen-agent status --model-id"],
     ["README.md", "hypergen-agent channels --model-id"],
     ["README.md", "hypergen-agent runner-status"],
+    ["README.md", "baseline `hypergen.requests.json`"],
+    ["README.md", "## Suggested Workspace Structure"],
+    ["README.md", "references/style/"],
     ["README.md", "hypergen-agent report-runner-status --body"],
     ["README.md", "--browser-permission verified"],
     ["README.md", "--dry-run"],
@@ -522,6 +526,7 @@ async function selfTest() {
     ["README.md", "agent-status.connected` as API-key activity only"],
     ["README.md", "Do not put cookies, passwords, API keys"],
     ["README.md", "Prefer `jobIds`"],
+    ["package.json", "\"hypergen.requests.json\""],
     ["SKILL.md", "Scoped API keys are intentionally narrow"],
     ["SKILL.md", "403 SCOPE_MISMATCH"],
     ["SKILL.md", "HyperGen cannot grant Safari"],
@@ -536,6 +541,14 @@ async function selfTest() {
     ["SKILL.md", "Prefer `jobIds"],
     ["SKILL.md", "live catalog's matching `creditCost`"],
     ["SKILL.md", "social-media-autoresearch"],
+    ["hypergen.requests.json", "\"id\": \"hello\""],
+    ["hypergen.requests.json", "\"id\": \"agent_status\""],
+    ["hypergen.requests.json", "\"id\": \"agent_runner_status\""],
+    ["hypergen.requests.json", "\"id\": \"agent_permissions_check\""],
+    ["hypergen.requests.json", "\"id\": \"agent_events_log\""],
+    ["hypergen.requests.json", "\"id\": \"agent_automations_save\""],
+    ["hypergen.requests.json", "\"id\": \"agent_automation_run\""],
+    ["hypergen.requests.json", "\"id\": \"postiz_post_from_job\""],
     ["references/api.md", "## Scoped API Keys"],
     ["references/api.md", "403 SCOPE_MISMATCH"],
     ["references/api.md", "through `jobIds`; the backend resolves"],
@@ -568,5 +581,6 @@ async function selfTest() {
     for (const failure of failures) console.error(`- ${failure}`);
     process.exit(1);
   }
+  JSON.parse(readFileSync(resolve(skillDir, "hypergen.requests.json"), "utf8"));
   console.log("ok hypergen-agent skill files present");
 }
