@@ -190,6 +190,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - First poll the generation job until `status: "completed"`.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/drafts`.
    - CLI shortcut: `node scripts/hypergen-agent.mjs draft --body draft.json --dry-run`, then remove `--dry-run` after approval.
+   - Before removing `--dry-run`, review `node scripts/hypergen-agent.mjs permissions --model-id <MODEL_ID>`. Direct agent Postiz calls are permission-gated: drafts require `posting.createPosts`; scheduled bodies require `posting.schedulePosts` plus `posting.approvalMode: "auto"`; publish bodies require `posting.publishPosts` plus `posting.approvalMode: "auto"`.
    - Prefer `jobIds: ["<JOB_ID>"]` over manually copying `mediaUrls`. The backend will resolve the job's media and upload it to Postiz.
    - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.
    - Final status reports should stay simple: list the completed job, credits used, saved output if available, and posting result such as Draft only / scheduled / published. Include a media handoff note only when a live Postiz API call actually failed.
@@ -200,6 +201,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - First generate the image or video job and poll until `status: "completed"`.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
    - CLI shortcut: `node scripts/hypergen-agent.mjs post-from-job --body post-from-job.json --dry-run`, then remove `--dry-run` after approval.
+   - Before the live call, confirm saved posting permission allows the requested mode. Draft output requires `posting.createPosts`; scheduling/publishing additionally require `posting.approvalMode: "auto"` and the matching schedule/publish permission.
    - Required body fields: `modelId`, `channelIds`, and `jobIds`.
    - HyperGen generates caption/hashtags, resolves/uploads the job media, and creates the Postiz draft.
    - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.

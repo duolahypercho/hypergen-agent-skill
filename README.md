@@ -304,6 +304,19 @@ Use `hypergen-agent draft --body draft.json --dry-run` to review the exact
 draft request without mutating Postiz. Remove `--dry-run` only after the user
 has approved draft creation.
 
+Before removing `--dry-run`, read saved posting permission:
+
+```bash
+hypergen-agent permissions --model-id <MODEL_ID>
+```
+
+Direct agent Postiz calls are permission-gated by HyperGen. Draft creation
+requires `posting.createPosts: true`. If the body includes `scheduledAt`,
+scheduling requires `posting.schedulePosts: true` and
+`posting.approvalMode: "auto"`. If the body includes `publishNow: true`,
+publishing requires `posting.publishPosts: true` and
+`posting.approvalMode: "auto"`.
+
 For a complete generated post package where HyperGen writes the caption and
 hashtags too:
 
@@ -318,7 +331,7 @@ hashtags too:
 
 Use `hypergen-agent post-from-job --body post-from-job.json --dry-run` to review
 the request first. Remove `--dry-run` only after the user has approved creating
-the Postiz output.
+the Postiz output and the saved posting permission allows the requested mode.
 
 Hashtags are optional and capped at 3. Prefer no hashtags or only `#fyp` for
 model-only lifestyle posts. Never use AI/self-labeling tags such as

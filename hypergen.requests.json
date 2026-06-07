@@ -337,7 +337,7 @@
     "mcpTool": "hypergen_create_social_draft",
     "method": "POST",
     "path": "/skill/hypergen/postiz/drafts",
-    "purpose": "Create a draft, scheduled, or immediate social post.",
+    "purpose": "Create a draft, scheduled, or immediate social post. Agent keys must have saved posting permission: create for drafts, schedule/publish plus auto approval for scheduled or immediate posts.",
     "confirmation": "publish"
   },
   {
@@ -345,7 +345,7 @@
     "mcpTool": "hypergen_create_social_post_from_job",
     "method": "POST",
     "path": "/skill/hypergen/postiz/posts/from-job",
-    "purpose": "Generate caption/hashtags and create a complete social post package from completed generated media jobIds.",
+    "purpose": "Generate caption/hashtags and create a complete social post package from completed generated media jobIds. Agent keys must have saved posting permission before caption credits or Postiz writes.",
     "confirmation": "publish"
   },
   {

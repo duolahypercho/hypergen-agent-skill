@@ -172,6 +172,21 @@ Do not create placeholder drafts while probing. The required fields are:
 `modelId`, `channelIds`, and either `jobIds` or `mediaUrls`; include `caption`
 or `title` for the post text.
 
+Direct agent Postiz calls are gated by saved posting permission before Postiz
+is mutated. Read it first with:
+
+```bash
+hypergen-agent permissions --model-id "$HYPERGEN_MODEL_ID"
+```
+
+Rules:
+
+- Draft creation requires `posting.createPosts: true`.
+- A request with `scheduledAt` requires `posting.schedulePosts: true` and
+  `posting.approvalMode: "auto"`.
+- A request with `publishNow: true` requires `posting.publishPosts: true` and
+  `posting.approvalMode: "auto"`.
+
 Hashtags are optional and have a hard cap of 3 total. Prefer no hashtags or
 only `#fyp` for model-only lifestyle posts. Never use AI/self-labeling tags such
 as `#AICreator`, `#AI`, `#AIGenerated`, `#UGC`, or `#HyperGen`. Captions must
@@ -215,8 +230,10 @@ The backend will:
 - create the Postiz draft,
 - return both the generated copy and draft.
 
-The agent should then review, enhance, ask for approval, schedule, publish, or
-regenerate based on the user's posting mode.
+The backend checks saved posting permission before caption generation or Postiz
+draft creation, so a denied agent key does not spend caption credits. The agent
+should then review, enhance, ask for approval, schedule, publish, or regenerate
+based on the user's posting mode.
 
 ## Automatic Employee Mode
 
