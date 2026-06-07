@@ -24,6 +24,7 @@ const commands = {
   "save-automation": saveAutomation,
   "run-automation": runAutomation,
   "automation-runs": automationRuns,
+  "report-runner-status": reportRunnerStatus,
   permissions,
   "check-permission": checkPermission,
   events,
@@ -56,6 +57,7 @@ Usage:
   hypergen-agent save-automation --body payload.json
   hypergen-agent run-automation --id ID
   hypergen-agent automation-runs --id ID
+  hypergen-agent report-runner-status --body payload.json
   hypergen-agent permissions [--model-id ID] [--product-id ID]
   hypergen-agent check-permission --body payload.json
   hypergen-agent events [--model-id ID] [--product-id ID]
@@ -264,6 +266,17 @@ async function automationRuns(args) {
   console.log(JSON.stringify(result, null, 2));
 }
 
+async function reportRunnerStatus(args) {
+  const bodyFile = parseFlag(args, "--body");
+  if (!bodyFile) throw new Error("--body payload.json is required");
+  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  const result = await api(`${API_PREFIX}/agent-runner-status`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
 async function permissions(args) {
   const { suffix } = scopeParams(args);
   const result = await api(`${API_PREFIX}/agent-permissions${suffix}`);
@@ -335,6 +348,7 @@ async function selfTest() {
     ["README.md", "## Install"],
     ["README.md", "hypergen-agent verify --model-id"],
     ["README.md", "hypergen-agent status --model-id"],
+    ["README.md", "hypergen-agent report-runner-status --body"],
     ["README.md", "verify` calls `/skill/hypergen/hello?message=hello` first"],
     ["README.md", "403 SCOPE_MISMATCH"],
     ["README.md", "HyperGen cannot grant Safari"],
@@ -344,6 +358,7 @@ async function selfTest() {
     ["SKILL.md", "403 SCOPE_MISMATCH"],
     ["SKILL.md", "HyperGen cannot grant Safari"],
     ["SKILL.md", "API-key activity only"],
+    ["SKILL.md", "agent-runner-status"],
     ["SKILL.md", "Use Grok for ordinary image generation/editing"],
     ["SKILL.md", "Hashtags: hard cap at 3"],
     ["SKILL.md", "Never use AI/self-labeling"],
@@ -359,6 +374,7 @@ async function selfTest() {
     ["references/engagement.md", "HyperGen permission is not an operating-system permission"],
     ["references/image-references.md", "reference"],
     ["scripts/hypergen-agent.mjs", "status: statusCommand"],
+    ["scripts/hypergen-agent.mjs", "reportRunnerStatus"],
     ["scripts/hypergen-agent.mjs", "api(`${API_PREFIX}/hello?message=hello`)"],
     ["scripts/hypergen-agent.mjs", "parseFlag(args, \"--product-id\")"],
   ];

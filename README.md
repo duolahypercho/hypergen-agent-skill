@@ -113,6 +113,12 @@ Read current agent-side request/media/post totals:
 hypergen-agent status --model-id <MODEL_ID> --product-id <PRODUCT_ID>
 ```
 
+Report local runner/browser/social-session readiness:
+
+```bash
+hypergen-agent report-runner-status --body runner-status.json
+```
+
 Log a local engagement/posting event:
 
 ```bash
@@ -226,6 +232,33 @@ skill checks HyperGen permission before acting and logs the result after.
 Treat `agent-status.connected` as API-key activity only. Verify the local
 runner, browser permission, and Instagram/TikTok/YouTube sessions locally before
 engagement.
+
+Report local runner readiness after verification:
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "runtime": "Codex",
+  "online": true,
+  "capabilities": ["browser_automation", "social_engagement"],
+  "browser": {
+    "name": "Safari",
+    "permission": "verified",
+    "lastVerifiedAt": "2026-06-07T12:00:00.000Z"
+  },
+  "socialSessions": [
+    {
+      "platform": "instagram",
+      "status": "logged_in",
+      "handle": "luna"
+    }
+  ]
+}
+```
+
+```bash
+hypergen-agent report-runner-status --body runner-status.json
+```
 
 Install the engagement add-on:
 

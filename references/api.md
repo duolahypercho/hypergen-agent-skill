@@ -303,6 +303,38 @@ stores the user's consent policy, action limits, and audit log. Official local
 agents must have user-approved local browser access, check HyperGen permission
 before acting, and log the result after every action.
 
+### Report local runner status
+
+Use this after the local runner verifies browser automation access and any
+platform login state. Do not send cookies, passwords, or session tokens.
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "runtime": "Codex",
+  "online": true,
+  "capabilities": ["browser_automation", "social_engagement"],
+  "browser": {
+    "name": "Safari",
+    "permission": "verified",
+    "lastVerifiedAt": "2026-06-07T12:00:00.000Z"
+  },
+  "socialSessions": [
+    {
+      "platform": "instagram",
+      "status": "logged_in",
+      "handle": "luna"
+    }
+  ]
+}
+```
+
+Endpoint: `PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-runner-status`.
+
+The `/skill/hypergen/agent-status` response includes the latest `runner`
+heartbeat. Treat `runner.online` as fresh only while the heartbeat has not gone
+stale.
+
 ### Review policy
 
 ```bash
