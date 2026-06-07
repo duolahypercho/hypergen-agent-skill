@@ -124,10 +124,10 @@ Return `outputUrls`, `videoUrl`, `creditsUsed`, and `status` from the job body.
 Use this after a generation job completes. Prefer `jobIds` so the backend
 resolves and uploads the generated media for Postiz.
 
-Completed jobs may return hosted URLs or inline base64/data-URI media. Both are
-valid through `jobIds`; the backend resolves, persists, and uploads the job
-media for Postiz. A base64/data-URI result does not require regeneration or a
-separate upload step.
+Completed generated jobs should expose hosted `outputUrls` or `videoUrl`.
+Legacy jobs may still contain inline base64/data-URI media, which remains valid
+through `jobIds`; the backend resolves, persists, and uploads the job media for
+Postiz.
 
 Final status reports should stay simple: list the completed job, credits used,
 saved output if available, and posting result such as Draft only / scheduled /
@@ -182,8 +182,7 @@ Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
 The backend will:
 
 - generate caption/title/hashtags,
-- resolve, persist, and upload the job media to Postiz, including inline
-  base64/data-URI outputs,
+- resolve, persist, and upload the job media to Postiz,
 - create the Postiz draft,
 - return both the generated copy and draft.
 

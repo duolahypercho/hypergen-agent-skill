@@ -141,7 +141,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - First poll the generation job until `status: "completed"`.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/drafts`.
    - Prefer `jobIds: ["<JOB_ID>"]` over manually copying `mediaUrls`. The backend will resolve the job's media and upload it to Postiz.
-   - Completed jobs may return hosted URLs or inline base64/data-URI media. Both are valid through `jobIds`; a base64/data-URI result does not require regeneration or a separate upload step.
+   - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.
    - Final status reports should stay simple: list the completed job, credits used, saved output if available, and posting result such as Draft only / scheduled / published. Include a media handoff note only when a live Postiz API call actually failed.
    - Required draft fields: `modelId`, `channelIds`, `caption` or `title`, and either `jobIds` or `mediaUrls`.
    - Do not create placeholder/test drafts to learn the schema. Use this exact shape.
@@ -151,7 +151,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
    - Required body fields: `modelId`, `channelIds`, and `jobIds`.
    - HyperGen generates caption/hashtags, resolves/uploads the job media, and creates the Postiz draft.
-   - Completed jobs may return hosted URLs or inline base64/data-URI media. Both are valid through `jobIds`; let the backend resolve/persist/upload the media.
+   - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.
    - Final status reports should stay simple: list the completed job, credits used, saved output if available, and posting result such as Draft only / scheduled / published. Include a media handoff note only when a live Postiz API call actually failed.
    - The agent's job after this is review: enhance the caption, ask for approval, schedule, publish, or regenerate.
 
