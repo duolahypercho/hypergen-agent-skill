@@ -230,6 +230,11 @@ The backend will:
 - create the Postiz draft,
 - return both the generated copy and draft.
 
+Response shape is `{ data: { caption, draft } }`. Read the saved HyperGen draft
+ID from `data.draft._id`, and read Postiz output IDs from
+`data.draft.postizPostIds` or `data.draft.postizPostId`. Do not treat a missing
+top-level `_id` as a failed draft.
+
 The backend checks saved posting permission before caption generation or Postiz
 draft creation, so a denied agent key does not spend caption credits. The agent
 should then review, enhance, ask for approval, schedule, publish, or regenerate
