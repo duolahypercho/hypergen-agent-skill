@@ -86,6 +86,7 @@ hypergen-agent check-updates
 hypergen-agent verify --model-id <MODEL_ID>
 hypergen-agent status --model-id <MODEL_ID>
 hypergen-agent channels --model-id <MODEL_ID>
+hypergen-agent runner-status --model-id <MODEL_ID>
 hypergen-agent download-docs --model-id <MODEL_ID> --out ./agent-workspace
 ```
 
@@ -93,6 +94,8 @@ hypergen-agent download-docs --model-id <MODEL_ID> --out ./agent-workspace
 credits, agent status, and the selected model/product context.
 `channels` checks the selected model's bound Postiz channels so agents can
 confirm scheduling/publishing is possible before saving employee mode.
+`runner-status` reads the latest local runner heartbeat without writing or
+claiming browser/social permission.
 
 The API host is `https://api.hypercho.com` and agent routes use
 `/skill/hypergen`. Do not call bare `/generate`, `/credits`, `/jobs`, or
@@ -140,6 +143,12 @@ Read current agent-side request/media/post totals:
 
 ```bash
 hypergen-agent status --model-id <MODEL_ID> --product-id <PRODUCT_ID>
+```
+
+Read latest local runner heartbeat:
+
+```bash
+hypergen-agent runner-status --model-id <MODEL_ID>
 ```
 
 Report local runner/browser/social-session readiness:

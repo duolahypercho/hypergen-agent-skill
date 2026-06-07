@@ -251,6 +251,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Before each live action, call `POST /skill/hypergen/agent-permissions/check` or `node scripts/hypergen-agent.mjs check-permission --body payload.json`.
    - Act only when the permission response says `allowed: true`.
    - After each action or skipped action, call `POST /skill/hypergen/agent-events` or `node scripts/hypergen-agent.mjs log-event --body payload.json`.
+   - Read the latest heartbeat with `node scripts/hypergen-agent.mjs runner-status --model-id <MODEL_ID>`.
    - After verifying local browser access and platform login, preview the heartbeat payload with `node scripts/hypergen-agent.mjs report-runner-status --model-id <MODEL_ID> --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna --dry-run`, then remove `--dry-run` to send it. Browser permission must be `unknown`, `not_verified`, or `verified`; social entries use `instagram`, `tiktok`, or `youtube` plus `unknown`, `not_logged_in`, or `logged_in`. Never include cookies, passwords, API keys, OAuth tokens, session tokens, or raw browser storage in runner metadata; the CLI strips sensitive metadata keys before dry-run output or API submission. Advanced agents may call `PUT /skill/hypergen/agent-runner-status` directly or use `node scripts/hypergen-agent.mjs report-runner-status --body runner-status.json`.
    - Log every engagement run in `engagement/logs/` and HyperGen agent events.
 
@@ -318,7 +319,7 @@ Use this checklist before telling the user automatic posting is production-ready
 3. `GET /skill/hypergen/agent-status?modelId=:modelId` shows API-key activity only. Do not treat this as proof of local browser permission.
 4. `GET /skill/hypergen/postiz/models/:modelId/channels` shows at least one selected channel for scheduling/publishing. CLI shortcut: `node scripts/hypergen-agent.mjs channels --model-id <MODEL_ID>`.
 5. If engagement is part of employee mode, verify the local runner is installed, the user granted Safari/Chrome/browser automation access, and the relevant Instagram/TikTok/YouTube session is logged in locally.
-6. `PUT /skill/hypergen/agent-runner-status` records the local runner heartbeat, browser permission, and social-session status without storing cookies or passwords.
+6. `GET /skill/hypergen/agent-runner-status` or `node scripts/hypergen-agent.mjs runner-status --model-id <MODEL_ID>` reads the latest local runner heartbeat. `PUT /skill/hypergen/agent-runner-status` records browser permission and social-session status without storing cookies or passwords.
 7. `PUT /skill/hypergen/agent-automations` returns the saved mode, content type, caps, `nextRunAt`, and `nextPostAt`.
 8. `GET /skill/hypergen/agent-automations?modelId=:modelId` confirms the saved values.
 9. If the user approved a test, `POST /skill/hypergen/agent-automations/:id/run` returns a run.

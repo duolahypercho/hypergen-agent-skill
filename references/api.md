@@ -333,6 +333,12 @@ only.
 Use this after the local runner verifies browser automation access and any
 platform login state. Do not send cookies, passwords, or session tokens.
 
+Read the current heartbeat without writing:
+
+```bash
+node scripts/hypergen-agent.mjs runner-status --model-id "$HYPERGEN_MODEL_ID"
+```
+
 ```json
 {
   "modelId": "6a1dee71e7929bbbd0996009",
