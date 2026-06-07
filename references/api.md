@@ -129,6 +129,10 @@ valid through `jobIds`; the backend resolves, persists, and uploads the job
 media for Postiz. Do not tell the user a base64 job cannot be pushed to Postiz,
 and do not require regeneration solely because a job returned base64.
 
+In final status reports, never add a warning that base64 media cannot be
+scheduled, published, drafted, or used through Postiz `jobIds`. If posting mode
+is Draft only, say only that nothing was scheduled or published.
+
 ```json
 {
   "modelId": "6a1dee71e7929bbbd0996009",
