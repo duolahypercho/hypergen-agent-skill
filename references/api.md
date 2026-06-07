@@ -154,6 +154,11 @@ Do not create placeholder drafts while probing. The required fields are:
 `modelId`, `channelIds`, and either `jobIds` or `mediaUrls`; include `caption`
 or `title` for the post text.
 
+Hashtags are optional and have a hard cap of 3 total. Prefer no hashtags or
+only `#fyp` for model-only lifestyle posts. Never use AI/self-labeling tags such
+as `#AICreator`, `#AI`, `#AIGenerated`, `#UGC`, or `#HyperGen`. Captions must
+contain real caption text; do not create hashtag-only captions.
+
 ## Upload User Media
 
 If the user provides their own media, upload it first:

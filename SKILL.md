@@ -202,6 +202,8 @@ Treat `hypergen.requests.json` as authoritative when present.
 - Business agents must not inherit the blurry model-selfie style by default. Use blur, low-light, grain, mirror selfies, or close-cropped selfie language for a business/product only when the user explicitly asks for that look.
 - Business + model agents: keep the product/business objective first and use the model as the creator or hand model only when a model is selected. The prompt should protect product accuracy while preserving the creator identity.
 - Captions: model-only captions sound like the creator's social voice; business captions sound like the brand/product voice and should mention the product, benefit, use case, or offer when relevant.
+- Hashtags: hard cap at 3 total. Prefer no hashtags or only #fyp for model-only lifestyle posts. Never use AI/self-labeling tags such as #AICreator, #AI, #AIGenerated, #UGC, or #HyperGen.
+- Captions must contain real caption text. Do not return hashtag-only captions; if there is no natural caption, omit hashtags rather than posting only tags.
 
 ## Safety
 
