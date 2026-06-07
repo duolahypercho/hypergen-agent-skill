@@ -255,6 +255,10 @@ Posting and engagement are separate powers:
 - Posting uses HyperGen + Postiz APIs.
 - Engagement uses the optional `social-media-autoresearch` add-on in the agent's
   browser/runtime environment.
+- HyperGen cannot grant Safari, Instagram, TikTok, or YouTube access by itself.
+  The user grants local browser/app access inside their own agent runtime.
+  HyperGen stores the policy, limits, and audit log, then the local skill checks
+  that policy before acting.
 
 Use engagement only when the user asks for it or when employee mode explicitly
 includes engagement. The default posture is review-first: propose the engagement

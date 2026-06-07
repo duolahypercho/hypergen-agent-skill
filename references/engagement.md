@@ -27,6 +27,10 @@ skills/social-media-autoresearch/
 ## Required Rules
 
 Engagement is a live action on real social accounts. Do not run it silently.
+HyperGen does not run this browser session and cannot unlock private local
+access. The user must authorize the local agent/browser on their own computer;
+HyperGen only stores the policy, checks each requested action, and records the
+audit trail.
 
 1. Verify the user asked for engagement or employee mode includes engagement.
 2. Confirm the platforms: Instagram, TikTok, YouTube, or a subset.
@@ -90,8 +94,10 @@ Per day:
 
 - HyperGen backend handles scheduled posting. Engagement currently runs in the
   external agent/browser environment because it depends on user social sessions.
-- HyperGen still owns the permission policy and audit log. The official local
-  agent workflow must check permission before acting and log the result after.
+- HyperGen permission is not an operating-system permission. It is a server-side
+  consent and limit policy. The local agent must still have user-approved access
+  to the browser profile, then check HyperGen before each action and log the
+  result after.
 - Do not store platform passwords or cookies in the HyperGen repo.
 - Do not bypass platform limits, captchas, or trust/safety warnings.
 - Keep engagement natural and sparse. The goal is realistic employee behavior,

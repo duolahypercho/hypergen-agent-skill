@@ -279,9 +279,11 @@ Before saying the automation works, verify the latest run has:
 
 ## Agent Permissions And Local Engagement Audit
 
-Engagement runs on the user's local computer/browser, but HyperGen stores the
-policy and audit log. Official local agents must check permission before acting
-and log the result after every action.
+Engagement runs on the user's local computer/browser, not inside HyperGen.
+HyperGen cannot grant private local browser or platform-session access. It
+stores the user's consent policy, action limits, and audit log. Official local
+agents must have user-approved local browser access, check HyperGen permission
+before acting, and log the result after every action.
 
 ### Review policy
 
