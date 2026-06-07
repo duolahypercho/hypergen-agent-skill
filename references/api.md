@@ -199,3 +199,80 @@ The backend will:
 
 The agent should then review, enhance, ask for approval, schedule, publish, or
 regenerate based on the user's posting mode.
+
+## Automatic Employee Mode
+
+Use this when the user wants HyperGen to handle the whole daily post loop
+without a chat session: generate media, create copy, draft/schedule/publish
+through Postiz, and keep a reviewable run log.
+
+### Review existing config
+
+```bash
+curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/agent-automations?modelId=$HYPERGEN_MODEL_ID" \
+  -H "Authorization: Bearer $HYPERGEN_API_KEY"
+```
+
+### Save config
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "enabled": true,
+  "mode": "draft",
+  "contentType": "image",
+  "channelIds": ["<POSTIZ_CHANNEL_ID>"],
+  "postTime": "19:30",
+  "timezone": "America/Chicago",
+  "leadMinutes": 30,
+  "prompt": "Daily camera-roll post, fresh outfit, natural blur, no AI branding.",
+  "captionTone": "short, human, casual",
+  "imageModelChoice": "grok",
+  "videoModelChoice": "seedance",
+  "maxCreditsPerRun": 12,
+  "monthlyCreditCap": 300
+}
+```
+
+Endpoint: `PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations`.
+
+Modes:
+
+- `draft`: create a Postiz draft for review.
+- `schedule`: generate ahead of `postTime` by `leadMinutes`, then schedule.
+- `publish`: publish automatically after generation.
+
+Content types:
+
+- `image`: creates a model-only image post.
+- `video`: creates an image first, then turns that image into a video.
+
+Do not enable automation without at least one bound Postiz channel. Do not claim
+it is enabled until a follow-up GET confirms `enabled: true`, `nextRunAt`, and
+the intended mode.
+
+### Run one approved test
+
+```bash
+curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/agent-automations/$AUTOMATION_ID/run" \
+  -H "Authorization: Bearer $HYPERGEN_API_KEY" \
+  -X POST
+```
+
+This is a live paid action. It can draft, schedule, or publish depending on the
+saved mode.
+
+### Review run history
+
+```bash
+curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/agent-automations/$AUTOMATION_ID/runs?limit=10" \
+  -H "Authorization: Bearer $HYPERGEN_API_KEY"
+```
+
+Before saying the automation works, verify the latest run has:
+
+- `status: "success"`,
+- generated `jobIds`,
+- created `postIds`,
+- `creditsUsed`,
+- no `error`.

@@ -108,6 +108,9 @@ Common endpoints:
 - Upload user media: `POST ${HYPERGEN_API_BASE}/skill/hypergen/uploads`
 - Job polling: `GET ${HYPERGEN_API_BASE}/skill/hypergen/jobs/:id`
 - Postiz draft: `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/drafts`
+- Employee mode config: `GET/PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations`
+- Employee mode test run: `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/run`
+- Employee mode run history: `GET ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/runs`
 
 For payload details, read `references/api.md`.
 For image-reference behavior, read `references/image-references.md`.
@@ -155,6 +158,39 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Final status reports should stay simple: list the completed job, credits used, saved output if available, and posting result such as Draft only / scheduled / published. Include a media handoff note only when a live Postiz API call actually failed.
    - The agent's job after this is review: enhance the caption, ask for approval, schedule, publish, or regenerate.
 
+7. User wants HyperGen or the agent to act like a real employee every day:
+   - First verify Postiz channels and credits.
+   - Review existing configuration with `GET ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations?modelId=<MODEL_ID>`.
+   - Save the configuration with `PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations`.
+   - Run a paid test only after user approval with `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/run`.
+   - Review `GET ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/runs` before saying it works.
+   - Modes:
+     - `draft`: generate the post and create a Postiz draft for review.
+     - `schedule`: generate ahead of the configured time and schedule in Postiz.
+     - `publish`: generate and publish through Postiz automatically.
+   - Required save body:
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "enabled": true,
+  "mode": "draft",
+  "contentType": "image",
+  "channelIds": ["<POSTIZ_CHANNEL_ID>"],
+  "postTime": "19:30",
+  "timezone": "America/Chicago",
+  "leadMinutes": 30,
+  "prompt": "Daily camera-roll post, fresh outfit, natural blur, no AI branding.",
+  "imageModelChoice": "grok",
+  "videoModelChoice": "seedance",
+  "maxCreditsPerRun": 12,
+  "monthlyCreditCap": 300
+}
+```
+
+   - Do not claim employee mode is enabled until the PUT response and a follow-up GET confirm `enabled: true`.
+   - Do not claim a test worked until the run history shows `status: "success"` and includes job/post IDs.
+
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.
 That is a response/storage detail only. Never copy those internal fields into
 the request body.
@@ -185,6 +221,19 @@ Treat `hypergen.requests.json` as authoritative when present.
 6. Ask before spending credits unless the user explicitly authorized generation.
 7. After creating a job, poll until `completed` or `failed`.
 8. Return real job IDs, credit usage, and media URLs only from live API responses.
+
+## Employee Mode Review Checklist
+
+Use this checklist before telling the user automatic posting is production-ready:
+
+1. `GET /skill/hypergen/hello?message=hello` returns connected.
+2. `GET /skill/hypergen/catalog` and `/credits` succeed.
+3. `GET /skill/hypergen/postiz/models/:modelId/channels` shows at least one selected channel.
+4. `PUT /skill/hypergen/agent-automations` returns the saved mode, content type, caps, `nextRunAt`, and `nextPostAt`.
+5. `GET /skill/hypergen/agent-automations?modelId=:modelId` confirms the saved values.
+6. If the user approved a test, `POST /skill/hypergen/agent-automations/:id/run` returns a run.
+7. `GET /skill/hypergen/agent-automations/:id/runs` shows the run result, credits, job IDs, post IDs, and any error.
+8. `GET /skill/hypergen/agent-status?modelId=:modelId` reflects the new requests/media/posts totals.
 
 ## Generation Defaults
 

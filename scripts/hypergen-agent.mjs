@@ -16,6 +16,10 @@ const commands = {
   "check-updates": checkUpdates,
   verify,
   "download-docs": downloadDocs,
+  automations,
+  "save-automation": saveAutomation,
+  "run-automation": runAutomation,
+  "automation-runs": automationRuns,
   generate,
   poll,
   "self-test": selfTest,
@@ -38,6 +42,10 @@ Usage:
   hypergen-agent check-updates
   hypergen-agent verify [--model-id ID]
   hypergen-agent download-docs --model-id ID [--out DIR]
+  hypergen-agent automations [--model-id ID]
+  hypergen-agent save-automation --body payload.json
+  hypergen-agent run-automation --id ID
+  hypergen-agent automation-runs --id ID
   hypergen-agent generate --body payload.json
   hypergen-agent poll --job-id ID
   hypergen-agent self-test
@@ -160,6 +168,42 @@ async function downloadDocs(args) {
     writeFileSync(file, text);
     console.log(`wrote ${file}`);
   }
+}
+
+async function automations(args) {
+  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
+  const qs = new URLSearchParams();
+  if (modelId) qs.set("modelId", modelId);
+  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  const result = await api(`${API_PREFIX}/agent-automations${suffix}`);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function saveAutomation(args) {
+  const bodyFile = parseFlag(args, "--body");
+  if (!bodyFile) throw new Error("--body payload.json is required");
+  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  const result = await api(`${API_PREFIX}/agent-automations`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function runAutomation(args) {
+  const id = parseFlag(args, "--id");
+  if (!id) throw new Error("--id is required");
+  const result = await api(`${API_PREFIX}/agent-automations/${encodeURIComponent(id)}/run`, {
+    method: "POST",
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function automationRuns(args) {
+  const id = parseFlag(args, "--id");
+  if (!id) throw new Error("--id is required");
+  const result = await api(`${API_PREFIX}/agent-automations/${encodeURIComponent(id)}/runs`);
+  console.log(JSON.stringify(result, null, 2));
 }
 
 async function generate(args) {
