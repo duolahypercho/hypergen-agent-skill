@@ -654,6 +654,19 @@ async function selfTest() {
   if (executablePull) {
     failures.push("scripts/check_updates.sh must not run git pull automatically");
   }
+  const literalKeyPattern =
+    /HYPERGEN_API_KEY\s*=\s*["']?(?!<YOUR_HYPERGEN_API_KEY>["']?\s*$)[A-Za-z0-9._~+/=-]{20,}/im;
+  const literalBearerPattern =
+    /Authorization:\s*Bearer\s+(?!\$HYPERGEN_API_KEY\b|\$\{HYPERGEN_API_KEY\}\b|<TOKEN>\b)[A-Za-z0-9._~+/=-]{20,}/im;
+  for (const file of checks) {
+    const source = readFileSync(resolve(skillDir, file), "utf8");
+    if (literalKeyPattern.test(source)) {
+      failures.push(`${file} contains a literal-looking HYPERGEN_API_KEY`);
+    }
+    if (literalBearerPattern.test(source)) {
+      failures.push(`${file} contains a literal-looking bearer token`);
+    }
+  }
   if (failures.length) {
     console.error("hypergen-agent skill self-test failed:");
     for (const failure of failures) console.error(`- ${failure}`);
