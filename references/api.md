@@ -346,6 +346,9 @@ node scripts/hypergen-agent.mjs report-runner-status \
 ```
 
 Remove `--dry-run` after reviewing the payload to send the heartbeat.
+Allowed browser permissions: `unknown`, `not_verified`, `verified`.
+Allowed social platforms: `instagram`, `tiktok`, `youtube`.
+Allowed social statuses: `unknown`, `not_logged_in`, `logged_in`.
 
 The `/skill/hypergen/agent-status` response includes the latest `runner`
 heartbeat. Treat `runner.online` as fresh only while the heartbeat has not gone

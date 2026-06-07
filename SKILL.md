@@ -227,7 +227,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Before each live action, call `POST /skill/hypergen/agent-permissions/check` or `node scripts/hypergen-agent.mjs check-permission --body payload.json`.
    - Act only when the permission response says `allowed: true`.
    - After each action or skipped action, call `POST /skill/hypergen/agent-events` or `node scripts/hypergen-agent.mjs log-event --body payload.json`.
-   - After verifying local browser access and platform login, preview the heartbeat payload with `node scripts/hypergen-agent.mjs report-runner-status --model-id <MODEL_ID> --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna --dry-run`, then remove `--dry-run` to send it. Advanced agents may call `PUT /skill/hypergen/agent-runner-status` directly or use `node scripts/hypergen-agent.mjs report-runner-status --body runner-status.json`.
+   - After verifying local browser access and platform login, preview the heartbeat payload with `node scripts/hypergen-agent.mjs report-runner-status --model-id <MODEL_ID> --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna --dry-run`, then remove `--dry-run` to send it. Browser permission must be `unknown`, `not_verified`, or `verified`; social entries use `instagram`, `tiktok`, or `youtube` plus `unknown`, `not_logged_in`, or `logged_in`. Advanced agents may call `PUT /skill/hypergen/agent-runner-status` directly or use `node scripts/hypergen-agent.mjs report-runner-status --body runner-status.json`.
    - Log every engagement run in `engagement/logs/` and HyperGen agent events.
 
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.

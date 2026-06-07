@@ -279,6 +279,9 @@ hypergen-agent report-runner-status \
 ```
 
 Remove `--dry-run` after the payload looks right to update HyperGen.
+Allowed `--browser-permission` values are `unknown`, `not_verified`, and
+`verified`. Allowed `--social` platforms are `instagram`, `tiktok`, and
+`youtube`; allowed statuses are `unknown`, `not_logged_in`, and `logged_in`.
 
 Install the engagement add-on:
 

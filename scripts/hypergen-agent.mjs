@@ -12,6 +12,9 @@ const APP_BASE = process.env.HYPERGEN_APP_BASE || "https://hypergen.hypercho.com
 const API_PREFIX = "/skill/hypergen";
 const ENGAGEMENT_REPO =
   "https://github.com/duolahypercho/social-media-autoresearch.git";
+const BROWSER_PERMISSIONS = ["unknown", "not_verified", "verified"];
+const SOCIAL_PLATFORMS = ["instagram", "tiktok", "youtube"];
+const SOCIAL_STATUSES = ["unknown", "not_logged_in", "logged_in"];
 
 const commands = {
   help,
@@ -42,7 +45,12 @@ if (!commands[command]) {
   process.exit(2);
 }
 
-await commands[command](args);
+try {
+  await commands[command](args);
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
 
 function help() {
   console.log(`HyperGen Agent CLI
@@ -319,6 +327,11 @@ async function reportRunnerStatus(args) {
   const browserName = parseFlag(args, "--browser");
   const browserPermission = parseFlag(args, "--browser-permission");
   const browserVerifiedAt = parseFlag(args, "--browser-verified-at");
+  if (browserPermission && !BROWSER_PERMISSIONS.includes(browserPermission)) {
+    throw new Error(
+      `--browser-permission must be one of: ${BROWSER_PERMISSIONS.join(", ")}`
+    );
+  }
   if (browserName || browserPermission || browserVerifiedAt) {
     body.browser = {
       ...(body.browser || {}),
@@ -351,6 +364,12 @@ function parseSocialSession(value) {
   const [platform, status = "unknown", handle = ""] = String(value).split(":");
   if (!platform) {
     throw new Error("--social requires platform:status[:handle]");
+  }
+  if (!SOCIAL_PLATFORMS.includes(platform)) {
+    throw new Error(`--social platform must be one of: ${SOCIAL_PLATFORMS.join(", ")}`);
+  }
+  if (!SOCIAL_STATUSES.includes(status)) {
+    throw new Error(`--social status must be one of: ${SOCIAL_STATUSES.join(", ")}`);
   }
   return {
     platform,
@@ -462,6 +481,9 @@ async function selfTest() {
     ["scripts/hypergen-agent.mjs", "reportRunnerStatus"],
     ["scripts/hypergen-agent.mjs", "parseSocialSession"],
     ["scripts/hypergen-agent.mjs", "args.includes(\"--dry-run\")"],
+    ["scripts/hypergen-agent.mjs", "error instanceof Error ? error.message"],
+    ["scripts/hypergen-agent.mjs", "BROWSER_PERMISSIONS"],
+    ["scripts/hypergen-agent.mjs", "SOCIAL_STATUSES"],
     ["scripts/hypergen-agent.mjs", "api(`${API_PREFIX}/hello?message=hello`)"],
     ["scripts/hypergen-agent.mjs", "parseFlag(args, \"--product-id\")"],
   ];
