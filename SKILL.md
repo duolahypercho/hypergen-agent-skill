@@ -104,6 +104,39 @@ set +a
 
 Never show the raw key in status output. Never run these scripts with `set -x`.
 
+## Safe API Response Handling
+
+- Never parse concatenated API output with `python -m json` or `json.load()`.
+  That causes `JSONDecodeError: Extra data` when two JSON documents, curl
+  progress, or shell text end up in one stream.
+- Keep one HTTP response per file. Use `>` or `-o`, never `>>`, for JSON
+  responses.
+- Prefer `curl -fsSL ... -o /tmp/hypergen-response.json` and validate that
+  single file before reading fields.
+- If a JSON parse fails with `Extra data`, discard the file and refetch it. Do
+  not continue from a partially parsed response.
+- When a script needs multiple endpoints, save them to separate files such as
+  `/tmp/hypergen-hello.json`, `/tmp/hypergen-catalog.json`, and
+  `/tmp/hypergen-credits.json`.
+
+Safe shell helper:
+
+```bash
+hypergen_get_json() {
+  path="$1"
+  url="$2"
+  tmp="${path}.tmp"
+  curl -fsSL -H "Authorization: Bearer ${HYPERGEN_API_KEY}" "$url" -o "$tmp"
+  python3 -m json.tool "$tmp" >/dev/null
+  mv "$tmp" "$path"
+}
+
+hypergen_get_json /tmp/hypergen-hello.json \
+  "${HYPERGEN_API_BASE}/skill/hypergen/hello?message=hello"
+hypergen_get_json /tmp/hypergen-catalog.json \
+  "${HYPERGEN_API_BASE}/skill/hypergen/catalog"
+```
+
 Common endpoints:
 
 - Catalog: `GET ${HYPERGEN_API_BASE}/skill/hypergen/catalog`
@@ -348,6 +381,39 @@ Use this checklist before telling the user automatic posting is production-ready
 - Captions: model-only captions sound like the creator's social voice; business captions sound like the brand/product voice and should mention the product, benefit, use case, or offer when relevant.
 - Hashtags: hard cap at 3 total. Prefer no hashtags or only #fyp for model-only lifestyle posts. Never use AI/self-labeling tags such as #AICreator, #AI, #AIGenerated, #UGC, or #HyperGen.
 - Captions must contain real caption text. Do not return hashtag-only captions; if there is no natural caption, omit hashtags rather than posting only tags.
+
+## Daily Viral UGC Style Bank
+
+Each day, pick one style direction before prompting. Use these as
+style/composition references only; do not copy another person's identity. If the
+API accepts a `referenceImage`, pass one of the style image URLs as
+`referenceImage` for model-only posts or inside `images` for business/product
+shots.
+
+1. Blurry close-crop bed selfie
+   - Best for: model-only lifestyle posts.
+   - Style image: `https://hypergen.hypercho.com/gallery-models/soft-kbeauty-portrait.png`
+   - Prompt add-on: `blurry low-light close-cropped phone selfie, half face near frame edge, visible grain, soft focus, messy hair, casual real-person outfit, imperfect bedroom light, compressed camera-roll texture, no text, no watermark`.
+
+2. Cafe mirror check
+   - Best for: model outfit posts or casual product-in-hand posts.
+   - Style image: `https://hypergen.hypercho.com/gallery-models/iphone-cafe-mirror-creator.png`
+   - Prompt add-on: `casual iPhone mirror selfie in a small cafe hallway, slightly smudged mirror, warm practical bulbs, mild indoor noise, relaxed pose, realistic phone perspective, outfit can vary naturally, no readable brands, no watermark`.
+
+3. Window-seat camera roll
+   - Best for: softer daily posts, captions, and morning/evening content.
+   - Style image: `https://hypergen.hypercho.com/gallery-models/mobile-window-seat-creator.png`
+   - Prompt add-on: `friend-taken smartphone photo near an apartment window, soft daylight, lived-in background, slight motion blur, natural skin texture, relaxed pose, imperfect auto-exposure, social-ready vertical crop`.
+
+4. Grocery aisle everyday proof
+   - Best for: business/product lifestyle use cases and approachable creator posts.
+   - Style image: `https://hypergen.hypercho.com/gallery-models/mobile-grocery-aisle-creator.png`
+   - Prompt add-on: `handheld smartphone shot in a grocery aisle, everyday fluorescent lighting, colorful blurred shelves, product or creator used naturally, candid real-life posture, mild phone HDR, no readable labels unless product accuracy requires it`.
+
+Daily use rule: rotate styles instead of repeating the same look. Model posts
+can use blurry/camera-roll styles by default; business posts should use the
+cleaner grocery/cafe/window styles unless the user explicitly asks for a blurry
+selfie ad.
 
 ## Safety
 
