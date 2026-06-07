@@ -289,12 +289,14 @@ Use this checklist before telling the user automatic posting is production-ready
 
 1. `GET /skill/hypergen/hello?message=hello` returns connected.
 2. `GET /skill/hypergen/catalog` and `/credits` succeed.
-3. `GET /skill/hypergen/postiz/models/:modelId/channels` shows at least one selected channel.
-4. `PUT /skill/hypergen/agent-automations` returns the saved mode, content type, caps, `nextRunAt`, and `nextPostAt`.
-5. `GET /skill/hypergen/agent-automations?modelId=:modelId` confirms the saved values.
-6. If the user approved a test, `POST /skill/hypergen/agent-automations/:id/run` returns a run.
-7. `GET /skill/hypergen/agent-automations/:id/runs` shows the run result, credits, job IDs, post IDs, and any error.
-8. `GET /skill/hypergen/agent-status?modelId=:modelId` reflects the new requests/media/posts totals.
+3. `GET /skill/hypergen/agent-status?modelId=:modelId` shows API-key activity only. Do not treat this as proof of local browser permission.
+4. `GET /skill/hypergen/postiz/models/:modelId/channels` shows at least one selected channel for scheduling/publishing.
+5. If engagement is part of employee mode, verify the local runner is installed, the user granted Safari/Chrome/browser automation access, and the relevant Instagram/TikTok/YouTube session is logged in locally.
+6. `PUT /skill/hypergen/agent-automations` returns the saved mode, content type, caps, `nextRunAt`, and `nextPostAt`.
+7. `GET /skill/hypergen/agent-automations?modelId=:modelId` confirms the saved values.
+8. If the user approved a test, `POST /skill/hypergen/agent-automations/:id/run` returns a run.
+9. `GET /skill/hypergen/agent-automations/:id/runs` shows the run result, credits, job IDs, post IDs, and any error.
+10. `GET /skill/hypergen/agent-status?modelId=:modelId` reflects the new requests/media/posts totals.
 
 ## Generation Defaults
 

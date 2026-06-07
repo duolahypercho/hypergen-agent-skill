@@ -15,7 +15,8 @@ Use this when an agent needs to:
 
 The skill is designed for local agent runtimes. HyperGen stores API policy,
 credit state, permissions, and audit events. Local browser actions still run on
-the user's computer.
+the user's computer. A connected HyperGen API key proves API access only; it
+does not prove Safari/Chrome permission or social-account login.
 
 ## Install
 
@@ -222,6 +223,9 @@ Posting and engagement are separate.
 HyperGen cannot grant Safari, Instagram, TikTok, or YouTube access by itself.
 The user authorizes local browser access in their own agent runtime. The local
 skill checks HyperGen permission before acting and logs the result after.
+Treat `agent-status.connected` as API-key activity only. Verify the local
+runner, browser permission, and Instagram/TikTok/YouTube sessions locally before
+engagement.
 
 Install the engagement add-on:
 
