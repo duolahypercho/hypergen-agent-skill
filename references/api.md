@@ -126,12 +126,13 @@ resolves and uploads the generated media for Postiz.
 
 Completed jobs may return hosted URLs or inline base64/data-URI media. Both are
 valid through `jobIds`; the backend resolves, persists, and uploads the job
-media for Postiz. Do not tell the user a base64 job cannot be pushed to Postiz,
-and do not require regeneration solely because a job returned base64.
+media for Postiz. A base64/data-URI result does not require regeneration or a
+separate upload step.
 
-In final status reports, never add a warning that base64 media cannot be
-scheduled, published, drafted, or used through Postiz `jobIds`. If posting mode
-is Draft only, say only that nothing was scheduled or published.
+Final status reports should stay simple: list the completed job, credits used,
+saved output if available, and posting result such as Draft only / scheduled /
+published. Include a media handoff note only when a live Postiz API call
+actually failed.
 
 ```json
 {
