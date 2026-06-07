@@ -309,5 +309,34 @@ async function selfTest() {
   for (const file of checks) {
     readFileSync(resolve(skillDir, file), "utf8");
   }
+  const requiredSnippets = [
+    ["SKILL.md", "Scoped API keys are intentionally narrow"],
+    ["SKILL.md", "403 SCOPE_MISMATCH"],
+    ["SKILL.md", "HyperGen cannot grant Safari"],
+    ["SKILL.md", "Use Grok for ordinary image generation/editing"],
+    ["SKILL.md", "Hashtags: hard cap at 3"],
+    ["SKILL.md", "Never use AI/self-labeling"],
+    ["SKILL.md", "Captions must contain real caption text"],
+    ["SKILL.md", "Prefer `jobIds"],
+    ["SKILL.md", "live catalog's matching `creditCost`"],
+    ["SKILL.md", "social-media-autoresearch"],
+    ["references/api.md", "## Scoped API Keys"],
+    ["references/api.md", "403 SCOPE_MISMATCH"],
+    ["references/api.md", "through `jobIds`; the backend resolves"],
+    ["references/api.md", "hard cap of 3 total"],
+    ["references/api.md", "HyperGen cannot grant private local browser"],
+    ["references/engagement.md", "HyperGen permission is not an operating-system permission"],
+    ["references/image-references.md", "reference"],
+  ];
+  const failures = [];
+  for (const [file, snippet] of requiredSnippets) {
+    const source = readFileSync(resolve(skillDir, file), "utf8");
+    if (!source.includes(snippet)) failures.push(`${file} missing ${snippet}`);
+  }
+  if (failures.length) {
+    console.error("hypergen-agent skill self-test failed:");
+    for (const failure of failures) console.error(`- ${failure}`);
+    process.exit(1);
+  }
   console.log("ok hypergen-agent skill files present");
 }
