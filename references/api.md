@@ -231,6 +231,13 @@ curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/agent-automations?modelId=$HYPERGE
   -H "Authorization: Bearer $HYPERGEN_API_KEY"
 ```
 
+Before enabling schedule or publish mode, confirm the model has a selected
+Postiz channel:
+
+```bash
+node scripts/hypergen-agent.mjs channels --model-id "$HYPERGEN_MODEL_ID"
+```
+
 ### Save config
 
 ```json

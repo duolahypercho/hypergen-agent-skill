@@ -206,6 +206,7 @@ Use this before every paid generation request. Do not guess alternate flags.
 
 7. User wants HyperGen or the agent to act like a real employee every day:
    - First verify Postiz channels and credits.
+   - CLI shortcut for channels: `node scripts/hypergen-agent.mjs channels --model-id <MODEL_ID>`.
    - Review existing configuration with `GET ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations?modelId=<MODEL_ID>`.
    - Save the configuration with `PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations`.
    - Run a paid test only after user approval with `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/run`.
@@ -315,7 +316,7 @@ Use this checklist before telling the user automatic posting is production-ready
 1. `GET /skill/hypergen/hello?message=hello` returns connected.
 2. `GET /skill/hypergen/catalog` and `/credits` succeed.
 3. `GET /skill/hypergen/agent-status?modelId=:modelId` shows API-key activity only. Do not treat this as proof of local browser permission.
-4. `GET /skill/hypergen/postiz/models/:modelId/channels` shows at least one selected channel for scheduling/publishing.
+4. `GET /skill/hypergen/postiz/models/:modelId/channels` shows at least one selected channel for scheduling/publishing. CLI shortcut: `node scripts/hypergen-agent.mjs channels --model-id <MODEL_ID>`.
 5. If engagement is part of employee mode, verify the local runner is installed, the user granted Safari/Chrome/browser automation access, and the relevant Instagram/TikTok/YouTube session is logged in locally.
 6. `PUT /skill/hypergen/agent-runner-status` records the local runner heartbeat, browser permission, and social-session status without storing cookies or passwords.
 7. `PUT /skill/hypergen/agent-automations` returns the saved mode, content type, caps, `nextRunAt`, and `nextPostAt`.

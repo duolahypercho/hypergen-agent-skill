@@ -85,11 +85,14 @@ Never run generation or polling scripts with `set -x`; it can print secrets.
 hypergen-agent check-updates
 hypergen-agent verify --model-id <MODEL_ID>
 hypergen-agent status --model-id <MODEL_ID>
+hypergen-agent channels --model-id <MODEL_ID>
 hypergen-agent download-docs --model-id <MODEL_ID> --out ./agent-workspace
 ```
 
 `verify` calls `/skill/hypergen/hello?message=hello` first, then checks catalog,
 credits, agent status, and the selected model/product context.
+`channels` checks the selected model's bound Postiz channels so agents can
+confirm scheduling/publishing is possible before saving employee mode.
 
 The API host is `https://api.hypercho.com` and agent routes use
 `/skill/hypergen`. Do not call bare `/generate`, `/credits`, `/jobs`, or
@@ -113,6 +116,12 @@ Review employee-mode automation:
 
 ```bash
 hypergen-agent automations --model-id <MODEL_ID> --product-id <PRODUCT_ID>
+```
+
+Check selected Postiz channels:
+
+```bash
+hypergen-agent channels --model-id <MODEL_ID>
 ```
 
 Save employee-mode automation:

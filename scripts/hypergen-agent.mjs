@@ -32,6 +32,7 @@ const commands = {
   "check-updates": checkUpdates,
   verify,
   status: statusCommand,
+  channels,
   "download-docs": downloadDocs,
   "install-engagement": installEngagement,
   automations,
@@ -70,6 +71,7 @@ Usage:
   hypergen-agent check-updates
   hypergen-agent verify [--model-id ID] [--product-id ID]
   hypergen-agent status [--model-id ID] [--product-id ID]
+  hypergen-agent channels --model-id ID
   hypergen-agent download-docs --model-id ID [--out DIR]
   hypergen-agent install-engagement [--out DIR]
   hypergen-agent automations [--model-id ID] [--product-id ID]
@@ -259,6 +261,15 @@ async function verify(args) {
 async function statusCommand(args) {
   const { suffix } = scopeParams(args);
   const result = await api(`${API_PREFIX}/agent-status${suffix}`);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function channels(args) {
+  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
+  if (!modelId) throw new Error("--model-id is required");
+  const result = await api(
+    `${API_PREFIX}/postiz/models/${encodeURIComponent(modelId)}/channels`
+  );
   console.log(JSON.stringify(result, null, 2));
 }
 
@@ -492,6 +503,7 @@ async function selfTest() {
     ["README.md", "## Install"],
     ["README.md", "hypergen-agent verify --model-id"],
     ["README.md", "hypergen-agent status --model-id"],
+    ["README.md", "hypergen-agent channels --model-id"],
     ["README.md", "hypergen-agent report-runner-status --body"],
     ["README.md", "--browser-permission verified"],
     ["README.md", "--dry-run"],
@@ -524,6 +536,7 @@ async function selfTest() {
     ["references/engagement.md", "HyperGen permission is not an operating-system permission"],
     ["references/image-references.md", "reference"],
     ["scripts/hypergen-agent.mjs", "status: statusCommand"],
+    ["scripts/hypergen-agent.mjs", "channels"],
     ["scripts/hypergen-agent.mjs", "reportRunnerStatus"],
     ["scripts/hypergen-agent.mjs", "parseSocialSession"],
     ["scripts/hypergen-agent.mjs", "args.includes(\"--dry-run\")"],
