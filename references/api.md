@@ -276,3 +276,65 @@ Before saying the automation works, verify the latest run has:
 - created `postIds`,
 - `creditsUsed`,
 - no `error`.
+
+## Agent Permissions And Local Engagement Audit
+
+Engagement runs on the user's local computer/browser, but HyperGen stores the
+policy and audit log. Official local agents must check permission before acting
+and log the result after every action.
+
+### Review policy
+
+```bash
+curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/agent-permissions?modelId=$HYPERGEN_MODEL_ID" \
+  -H "Authorization: Bearer $HYPERGEN_API_KEY"
+```
+
+### Check before action
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "platform": "instagram",
+  "action": "engagement_like",
+  "metadata": {
+    "source": "safari"
+  }
+}
+```
+
+Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-permissions/check`.
+
+Allowed engagement actions:
+
+- `engagement_view`
+- `engagement_like`
+- `engagement_save`
+- `engagement_comment`
+- `engagement_follow`
+
+Act only when the response has `allowed: true`. If denied, stop or ask the
+user.
+
+### Log after action
+
+```json
+{
+  "modelId": "6a1dee71e7929bbbd0996009",
+  "platform": "instagram",
+  "action": "engagement_like",
+  "decision": "allowed",
+  "status": "success",
+  "url": "https://www.instagram.com/reel/...",
+  "title": "Short description"
+}
+```
+
+Endpoint: `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-events`.
+
+Review logs:
+
+```bash
+curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/agent-events?modelId=$HYPERGEN_MODEL_ID" \
+  -H "Authorization: Bearer $HYPERGEN_API_KEY"
+```

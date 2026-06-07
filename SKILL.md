@@ -117,6 +117,9 @@ Common endpoints:
 - Employee mode config: `GET/PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations`
 - Employee mode test run: `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/run`
 - Employee mode run history: `GET ${HYPERGEN_API_BASE}/skill/hypergen/agent-automations/:id/runs`
+- Agent permissions: `GET/PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-permissions`
+- Permission check: `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-permissions/check`
+- Agent event log: `GET/POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-events`
 
 For payload details, read `references/api.md`.
 For image-reference behavior, read `references/image-references.md`.
@@ -209,7 +212,10 @@ Use this before every paid generation request. Do not guess alternate flags.
      - YouTube: `skills/social-media-autoresearch/social-media-engagement/youtube/SKILL.md`
    - Ask for approval before live engagement unless the user explicitly enabled automatic engagement.
    - Treat likes, saves, favorites, comments, follows, and subscribes as live account actions.
-   - Log every engagement run in `engagement/logs/`.
+   - Before each live action, call `POST /skill/hypergen/agent-permissions/check` or `node scripts/hypergen-agent.mjs check-permission --body payload.json`.
+   - Act only when the permission response says `allowed: true`.
+   - After each action or skipped action, call `POST /skill/hypergen/agent-events` or `node scripts/hypergen-agent.mjs log-event --body payload.json`.
+   - Log every engagement run in `engagement/logs/` and HyperGen agent events.
 
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.
 That is a response/storage detail only. Never copy those internal fields into

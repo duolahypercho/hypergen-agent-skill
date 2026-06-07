@@ -33,9 +33,15 @@ Engagement is a live action on real social accounts. Do not run it silently.
 3. Confirm the niche/topics and skip keywords.
 4. Confirm safety limits before the first run.
 5. Use the user's logged-in browser/session where required.
-6. Watch/read before interacting; do not mass-like or spam.
-7. Log every action in `engagement/logs/YYYY-MM-DD.md`.
-8. Stop immediately on login prompts, rate limits, captchas, suspicious-account
+6. Before every live action, ask HyperGen permission with
+   `POST /skill/hypergen/agent-permissions/check` or
+   `node scripts/hypergen-agent.mjs check-permission --body payload.json`.
+7. Act only when HyperGen returns `allowed: true`.
+8. Watch/read before interacting; do not mass-like or spam.
+9. Log every action to HyperGen with `POST /skill/hypergen/agent-events` or
+   `node scripts/hypergen-agent.mjs log-event --body payload.json`.
+10. Log every action in `engagement/logs/YYYY-MM-DD.md`.
+11. Stop immediately on login prompts, rate limits, captchas, suspicious-account
    warnings, or platform errors.
 
 ## Default Safety Limits
@@ -69,8 +75,9 @@ Per day:
    - check topic match,
    - skip ads, sponsors, paid partnerships, off-topic content, or low quality,
    - watch at least 30 seconds,
+   - call the HyperGen permission check for the intended action,
    - perform only approved actions,
-   - log URL/title/action/reason.
+   - log URL/title/action/reason locally and with HyperGen agent events.
 6. Report a concise summary:
    - viewed,
    - liked,
@@ -83,6 +90,8 @@ Per day:
 
 - HyperGen backend handles scheduled posting. Engagement currently runs in the
   external agent/browser environment because it depends on user social sessions.
+- HyperGen still owns the permission policy and audit log. The official local
+  agent workflow must check permission before acting and log the result after.
 - Do not store platform passwords or cookies in the HyperGen repo.
 - Do not bypass platform limits, captchas, or trust/safety warnings.
 - Keep engagement natural and sparse. The goal is realistic employee behavior,

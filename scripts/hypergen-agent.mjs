@@ -23,6 +23,10 @@ const commands = {
   "save-automation": saveAutomation,
   "run-automation": runAutomation,
   "automation-runs": automationRuns,
+  permissions,
+  "check-permission": checkPermission,
+  events,
+  "log-event": logEvent,
   generate,
   poll,
   "self-test": selfTest,
@@ -50,6 +54,10 @@ Usage:
   hypergen-agent save-automation --body payload.json
   hypergen-agent run-automation --id ID
   hypergen-agent automation-runs --id ID
+  hypergen-agent permissions [--model-id ID]
+  hypergen-agent check-permission --body payload.json
+  hypergen-agent events [--model-id ID]
+  hypergen-agent log-event --body payload.json
   hypergen-agent generate --body payload.json
   hypergen-agent poll --job-id ID
   hypergen-agent self-test
@@ -226,6 +234,46 @@ async function automationRuns(args) {
   const id = parseFlag(args, "--id");
   if (!id) throw new Error("--id is required");
   const result = await api(`${API_PREFIX}/agent-automations/${encodeURIComponent(id)}/runs`);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function permissions(args) {
+  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
+  const qs = new URLSearchParams();
+  if (modelId) qs.set("modelId", modelId);
+  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  const result = await api(`${API_PREFIX}/agent-permissions${suffix}`);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function checkPermission(args) {
+  const bodyFile = parseFlag(args, "--body");
+  if (!bodyFile) throw new Error("--body payload.json is required");
+  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  const result = await api(`${API_PREFIX}/agent-permissions/check`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function events(args) {
+  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
+  const qs = new URLSearchParams();
+  if (modelId) qs.set("modelId", modelId);
+  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  const result = await api(`${API_PREFIX}/agent-events${suffix}`);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+async function logEvent(args) {
+  const bodyFile = parseFlag(args, "--body");
+  if (!bodyFile) throw new Error("--body payload.json is required");
+  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  const result = await api(`${API_PREFIX}/agent-events`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
   console.log(JSON.stringify(result, null, 2));
 }
 
