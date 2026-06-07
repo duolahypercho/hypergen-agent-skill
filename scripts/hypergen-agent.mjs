@@ -297,6 +297,7 @@ async function poll(args) {
 
 async function selfTest() {
   const checks = [
+    "README.md",
     "SKILL.md",
     "references/api.md",
     "references/image-references.md",
@@ -310,6 +311,11 @@ async function selfTest() {
     readFileSync(resolve(skillDir, file), "utf8");
   }
   const requiredSnippets = [
+    ["README.md", "## Install"],
+    ["README.md", "hypergen-agent verify --model-id"],
+    ["README.md", "403 SCOPE_MISMATCH"],
+    ["README.md", "HyperGen cannot grant Safari"],
+    ["README.md", "Prefer `jobIds`"],
     ["SKILL.md", "Scoped API keys are intentionally narrow"],
     ["SKILL.md", "403 SCOPE_MISMATCH"],
     ["SKILL.md", "HyperGen cannot grant Safari"],
