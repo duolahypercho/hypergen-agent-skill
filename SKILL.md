@@ -201,7 +201,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - First generate the image or video job and poll until `status: "completed"`.
    - Then call `POST ${HYPERGEN_API_BASE}/skill/hypergen/postiz/posts/from-job`.
    - CLI shortcut: `node scripts/hypergen-agent.mjs post-from-job --body post-from-job.json --dry-run`, then remove `--dry-run` after approval.
-   - Before the live call, confirm saved posting permission allows the requested mode. Draft output requires `posting.createPosts`; scheduling/publishing additionally require `posting.approvalMode: "auto"` and the matching schedule/publish permission.
+   - Before the live call, confirm saved posting permission allows the requested mode. HyperGen checks this before caption credits are spent or Postiz writes happen. Draft output requires `posting.createPosts`; scheduling/publishing additionally require `posting.approvalMode: "auto"` and the matching schedule/publish permission.
    - Required body fields: `modelId`, `channelIds`, and `jobIds`.
    - HyperGen generates caption/hashtags, resolves/uploads the job media, and creates the Postiz draft.
    - Completed generated jobs should expose hosted `outputUrls` or `videoUrl`. Legacy jobs may still contain inline base64/data-URI media, which remains valid through `jobIds`.

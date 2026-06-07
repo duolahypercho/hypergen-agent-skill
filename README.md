@@ -315,7 +315,9 @@ requires `posting.createPosts: true`. If the body includes `scheduledAt`,
 scheduling requires `posting.schedulePosts: true` and
 `posting.approvalMode: "auto"`. If the body includes `publishNow: true`,
 publishing requires `posting.publishPosts: true` and
-`posting.approvalMode: "auto"`.
+`posting.approvalMode: "auto"`. For `/skill/hypergen/postiz/posts/from-job`,
+HyperGen checks saved posting permission before caption credits are spent or
+Postiz writes happen.
 
 For a complete generated post package where HyperGen writes the caption and
 hashtags too:
