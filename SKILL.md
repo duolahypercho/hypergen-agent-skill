@@ -121,6 +121,17 @@ Common endpoints:
 - Permission check: `POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-permissions/check`
 - Agent event log: `GET/POST ${HYPERGEN_API_BASE}/skill/hypergen/agent-events`
 
+Scoped API keys are intentionally narrow:
+
+- A model-scoped key can access only that model, its jobs, posts, channels,
+  permissions, events, and automations.
+- A product/business-scoped key can access only that product/business.
+- A key scoped to both can use that exact model + product pair.
+- If a list/read/generation/posting call returns `403 SCOPE_MISMATCH`, do not
+  call the API broken or the key invalid. Ask the user to export a key with the
+  needed model/product scope, or use an unscoped developer key only when they
+  intentionally want account-wide access.
+
 For payload details, read `references/api.md`.
 For image-reference behavior, read `references/image-references.md`.
 For Instagram, TikTok, and YouTube engagement behavior, read

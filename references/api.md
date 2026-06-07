@@ -125,6 +125,24 @@ curl -fsSL "$HYPERGEN_API_BASE/skill/hypergen/jobs/$JOB_ID" \
 
 Return `outputUrls`, `videoUrl`, `creditsUsed`, and `status` from the job body.
 
+## Scoped API Keys
+
+HyperGen agent keys may be scoped to a model, a product/business, or both.
+Respect that scope before every read, generation, post, automation, and
+engagement action.
+
+- Model-scoped key: use only that model. Do not list saved products or attach
+  arbitrary saved product IDs.
+- Product-scoped key: use only that product/business. Do not list saved models
+  or post through arbitrary model channels.
+- Model + product scoped key: use only that exact pair.
+- Unscoped developer key: account-wide. Use only when the user intentionally
+  selected account-wide access.
+
+If the API returns `403 SCOPE_MISMATCH`, the key is valid but too narrow for the
+requested action. Ask the user to export a matching key instead of retrying
+random endpoints or declaring the API broken.
+
 ## Create Postiz Draft From A Job
 
 Use this after a generation job completes. Prefer `jobIds` so the backend
