@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,12 +10,15 @@ const skillDir = resolve(__dirname, "..");
 const API_BASE = process.env.HYPERGEN_API_BASE || "https://api.hypercho.com";
 const APP_BASE = process.env.HYPERGEN_APP_BASE || "https://hypergen.hypercho.com";
 const API_PREFIX = "/skill/hypergen";
+const ENGAGEMENT_REPO =
+  "https://github.com/duolahypercho/social-media-autoresearch.git";
 
 const commands = {
   help,
   "check-updates": checkUpdates,
   verify,
   "download-docs": downloadDocs,
+  "install-engagement": installEngagement,
   automations,
   "save-automation": saveAutomation,
   "run-automation": runAutomation,
@@ -42,6 +45,7 @@ Usage:
   hypergen-agent check-updates
   hypergen-agent verify [--model-id ID]
   hypergen-agent download-docs --model-id ID [--out DIR]
+  hypergen-agent install-engagement [--out DIR]
   hypergen-agent automations [--model-id ID]
   hypergen-agent save-automation --body payload.json
   hypergen-agent run-automation --id ID
@@ -57,6 +61,7 @@ Environment:
 
 Important:
   Agent API paths use ${API_PREFIX}. Do not call bare /generate or /credits.
+  Engagement add-on repo: ${ENGAGEMENT_REPO}
 `);
 }
 
@@ -170,6 +175,24 @@ async function downloadDocs(args) {
   }
 }
 
+async function installEngagement(args) {
+  const outDir = resolve(parseFlag(args, "--out") || "skills/social-media-autoresearch");
+  if (existsSync(outDir)) {
+    console.log(`engagement add-on already exists at ${outDir}`);
+    return;
+  }
+  mkdirSync(dirname(outDir), { recursive: true });
+  const result = spawnSync("git", ["clone", "--depth", "1", ENGAGEMENT_REPO, outDir], {
+    encoding: "utf8",
+    stdio: "inherit",
+  });
+  if (result.status !== 0) {
+    throw new Error("Could not install social engagement add-on");
+  }
+  console.log(`installed social engagement add-on to ${outDir}`);
+  console.log("read social-media-engagement/instagram, /tiktok, and /youtube before engaging");
+}
+
 async function automations(args) {
   const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
   const qs = new URLSearchParams();
@@ -229,6 +252,7 @@ async function selfTest() {
     "SKILL.md",
     "references/api.md",
     "references/image-references.md",
+    "references/engagement.md",
     "scripts/check_updates.sh",
     "scripts/hypergen-agent.mjs",
     "hooks/pre-chat.sh",

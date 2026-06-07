@@ -52,6 +52,12 @@ creator-agent folder:
 |-- postiz/
 |   |-- drafts/
 |   `-- channels.md
+|-- engagement/
+|   |-- plans/
+|   |-- logs/
+|   `-- reports/
+|-- skills/
+|   `-- social-media-autoresearch/
 `-- logs/
     |-- api-calls.md
     `-- decisions.md
@@ -114,6 +120,8 @@ Common endpoints:
 
 For payload details, read `references/api.md`.
 For image-reference behavior, read `references/image-references.md`.
+For Instagram, TikTok, and YouTube engagement behavior, read
+`references/engagement.md`.
 
 ## Generation Decision Tree
 
@@ -191,6 +199,18 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Do not claim employee mode is enabled until the PUT response and a follow-up GET confirm `enabled: true`.
    - Do not claim a test worked until the run history shows `status: "success"` and includes job/post IDs.
 
+8. User wants the agent to do social engagement too:
+   - Install the engagement add-on inside the creator-agent workspace:
+     `node scripts/hypergen-agent.mjs install-engagement`
+   - Read `references/engagement.md`.
+   - Then read the platform skill:
+     - Instagram: `skills/social-media-autoresearch/social-media-engagement/instagram/SKILL.md`
+     - TikTok: `skills/social-media-autoresearch/social-media-engagement/tiktok/SKILL.md`
+     - YouTube: `skills/social-media-autoresearch/social-media-engagement/youtube/SKILL.md`
+   - Ask for approval before live engagement unless the user explicitly enabled automatic engagement.
+   - Treat likes, saves, favorites, comments, follows, and subscribes as live account actions.
+   - Log every engagement run in `engagement/logs/`.
+
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.
 That is a response/storage detail only. Never copy those internal fields into
 the request body.
@@ -221,6 +241,26 @@ Treat `hypergen.requests.json` as authoritative when present.
 6. Ask before spending credits unless the user explicitly authorized generation.
 7. After creating a job, poll until `completed` or `failed`.
 8. Return real job IDs, credit usage, and media URLs only from live API responses.
+
+## Engagement Mode
+
+Posting and engagement are separate powers:
+
+- Posting uses HyperGen + Postiz APIs.
+- Engagement uses the optional `social-media-autoresearch` add-on in the agent's
+  browser/runtime environment.
+
+Use engagement only when the user asks for it or when employee mode explicitly
+includes engagement. The default posture is review-first: propose the engagement
+plan, confirm platforms and safety limits, then run.
+
+Install the add-on:
+
+```bash
+node scripts/hypergen-agent.mjs install-engagement
+```
+
+Then follow `references/engagement.md` and the platform-specific skill file.
 
 ## Employee Mode Review Checklist
 
