@@ -341,8 +341,11 @@ node scripts/hypergen-agent.mjs report-runner-status \
   --browser-permission verified \
   --capability browser_automation \
   --capability social_engagement \
-  --social instagram:logged_in:luna
+  --social instagram:logged_in:luna \
+  --dry-run
 ```
+
+Remove `--dry-run` after reviewing the payload to send the heartbeat.
 
 The `/skill/hypergen/agent-status` response includes the latest `runner`
 heartbeat. Treat `runner.online` as fresh only while the heartbeat has not gone

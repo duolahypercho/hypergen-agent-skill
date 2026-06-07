@@ -124,7 +124,8 @@ hypergen-agent report-runner-status \
   --browser-permission verified \
   --capability browser_automation \
   --capability social_engagement \
-  --social instagram:logged_in:luna
+  --social instagram:logged_in:luna \
+  --dry-run
 ```
 
 Log a local engagement/posting event:
@@ -273,8 +274,11 @@ hypergen-agent report-runner-status \
   --browser-permission verified \
   --capability browser_automation \
   --capability social_engagement \
-  --social instagram:logged_in:luna
+  --social instagram:logged_in:luna \
+  --dry-run
 ```
+
+Remove `--dry-run` after the payload looks right to update HyperGen.
 
 Install the engagement add-on:
 

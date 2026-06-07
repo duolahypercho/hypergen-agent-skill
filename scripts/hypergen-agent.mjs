@@ -58,7 +58,7 @@ Usage:
   hypergen-agent run-automation --id ID
   hypergen-agent automation-runs --id ID
   hypergen-agent report-runner-status --body payload.json
-  hypergen-agent report-runner-status --model-id ID --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna
+  hypergen-agent report-runner-status --model-id ID --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna [--dry-run]
   hypergen-agent permissions [--model-id ID] [--product-id ID]
   hypergen-agent check-permission --body payload.json
   hypergen-agent events [--model-id ID] [--product-id ID]
@@ -335,6 +335,11 @@ async function reportRunnerStatus(args) {
   const socialSessions = parseFlags(args, "--social").map(parseSocialSession);
   if (socialSessions.length) body.socialSessions = socialSessions;
 
+  if (args.includes("--dry-run")) {
+    console.log(JSON.stringify(body, null, 2));
+    return;
+  }
+
   const result = await api(`${API_PREFIX}/agent-runner-status`, {
     method: "PUT",
     body: JSON.stringify(body),
@@ -428,6 +433,7 @@ async function selfTest() {
     ["README.md", "hypergen-agent status --model-id"],
     ["README.md", "hypergen-agent report-runner-status --body"],
     ["README.md", "--browser-permission verified"],
+    ["README.md", "--dry-run"],
     ["README.md", "verify` calls `/skill/hypergen/hello?message=hello` first"],
     ["README.md", "403 SCOPE_MISMATCH"],
     ["README.md", "HyperGen cannot grant Safari"],
@@ -455,6 +461,7 @@ async function selfTest() {
     ["scripts/hypergen-agent.mjs", "status: statusCommand"],
     ["scripts/hypergen-agent.mjs", "reportRunnerStatus"],
     ["scripts/hypergen-agent.mjs", "parseSocialSession"],
+    ["scripts/hypergen-agent.mjs", "args.includes(\"--dry-run\")"],
     ["scripts/hypergen-agent.mjs", "api(`${API_PREFIX}/hello?message=hello`)"],
     ["scripts/hypergen-agent.mjs", "parseFlag(args, \"--product-id\")"],
   ];
