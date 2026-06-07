@@ -18,6 +18,26 @@ credit state, permissions, and audit events. Local browser actions still run on
 the user's computer. A connected HyperGen API key proves API access only; it
 does not prove Safari/Chrome permission or social-account login.
 
+## Permission Model
+
+There are two separate permission layers:
+
+1. HyperGen permission is server-side consent. It records what the user allows,
+   which model/product the agent can act for, action limits, posting mode, and
+   audit history.
+2. Local permission is private computer access. Safari, Chrome, Instagram,
+   TikTok, YouTube, cookies, login sessions, and OS automation prompts stay on
+   the user's machine and are never granted by HyperGen.
+
+The local runner must verify browser access locally, then report only a small
+readiness heartbeat to HyperGen with `report-runner-status`. That heartbeat can
+say `browser.permission: "verified"` or `socialSessions[].status: "logged_in"`,
+but it must not include cookies, tokens, passwords, or raw browser storage.
+
+Before any live local action, the runner must still call the HyperGen permission
+check endpoint. The action is allowed only when both layers are true: local
+browser access is available and HyperGen returns `allowed: true`.
+
 ## Install
 
 ```bash

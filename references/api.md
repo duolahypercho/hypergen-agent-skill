@@ -303,6 +303,20 @@ stores the user's consent policy, action limits, and audit log. Official local
 agents must have user-approved local browser access, check HyperGen permission
 before acting, and log the result after every action.
 
+This means permission is not a single switch:
+
+1. HyperGen stores the allowed actions and limits for the scoped key.
+2. The local runner verifies private browser/OS/social-session access on the
+   user's computer.
+3. The local runner reports non-sensitive readiness with
+   `/skill/hypergen/agent-runner-status`.
+4. Before each live browser action, the runner calls
+   `/skill/hypergen/agent-permissions/check`.
+
+Do not send private session material to HyperGen. Status payloads may include
+browser name, permission state, platform name, login state, and public handle
+only.
+
 ### Report local runner status
 
 Use this after the local runner verifies browser automation access and any

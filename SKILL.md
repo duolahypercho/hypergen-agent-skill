@@ -138,6 +138,29 @@ For image-reference behavior, read `references/image-references.md`.
 For Instagram, TikTok, and YouTube engagement behavior, read
 `references/engagement.md`.
 
+## Two-Layer Permission Model
+
+Do not describe HyperGen permission as Safari/Chrome/social-account access.
+These are different layers:
+
+1. HyperGen permission is the server-side policy: who owns the key, which
+   model/product it can touch, which actions are allowed, action limits, posting
+   mode, and audit logs.
+2. Local permission is the user's private computer/browser access: OS
+   automation prompts, Safari or Chrome profile access, and logged-in Instagram,
+   TikTok, or YouTube sessions.
+
+HyperGen cannot grant the second layer. The local skill/runner must verify it
+inside the user's runtime, then send only readiness status with
+`PUT /skill/hypergen/agent-runner-status` or
+`node scripts/hypergen-agent.mjs report-runner-status`. Never send cookies,
+passwords, OAuth tokens, API keys, session tokens, or raw browser storage.
+
+Before every live browser or engagement action, require both checks:
+
+1. Local runner says browser/session access is verified.
+2. `POST /skill/hypergen/agent-permissions/check` returns `allowed: true`.
+
 ## Generation Decision Tree
 
 Use this before every paid generation request. Do not guess alternate flags.

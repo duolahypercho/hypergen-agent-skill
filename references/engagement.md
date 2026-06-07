@@ -32,6 +32,17 @@ access. The user must authorize the local agent/browser on their own computer;
 HyperGen only stores the policy, checks each requested action, and records the
 audit trail.
 
+Think of permission as a two-key system:
+
+- HyperGen key: server-side consent, scope, limits, mode, and audit log.
+- Local key: the user's private OS/browser/social-session access on their own
+  computer.
+
+Both are required. If HyperGen allows an action but the local browser is not
+logged in or automation permission is missing, stop and ask the user to complete
+local setup. If the local browser is ready but HyperGen denies the action, stop
+and report the denial. Never work around either layer.
+
 1. Verify the user asked for engagement or employee mode includes engagement.
 2. Confirm the platforms: Instagram, TikTok, YouTube, or a subset.
 3. Confirm the niche/topics and skip keywords.
