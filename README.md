@@ -117,6 +117,14 @@ Report local runner/browser/social-session readiness:
 
 ```bash
 hypergen-agent report-runner-status --body runner-status.json
+hypergen-agent report-runner-status \
+  --model-id <MODEL_ID> \
+  --runtime Codex \
+  --browser Safari \
+  --browser-permission verified \
+  --capability browser_automation \
+  --capability social_engagement \
+  --social instagram:logged_in:luna
 ```
 
 Log a local engagement/posting event:
@@ -258,6 +266,14 @@ Report local runner readiness after verification:
 
 ```bash
 hypergen-agent report-runner-status --body runner-status.json
+hypergen-agent report-runner-status \
+  --model-id "$HYPERGEN_MODEL_ID" \
+  --runtime Codex \
+  --browser Safari \
+  --browser-permission verified \
+  --capability browser_automation \
+  --capability social_engagement \
+  --social instagram:logged_in:luna
 ```
 
 Install the engagement add-on:

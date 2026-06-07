@@ -58,6 +58,7 @@ Usage:
   hypergen-agent run-automation --id ID
   hypergen-agent automation-runs --id ID
   hypergen-agent report-runner-status --body payload.json
+  hypergen-agent report-runner-status --model-id ID --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna
   hypergen-agent permissions [--model-id ID] [--product-id ID]
   hypergen-agent check-permission --body payload.json
   hypergen-agent events [--model-id ID] [--product-id ID]
@@ -93,6 +94,27 @@ function parseFlag(args, name) {
     throw new Error(`${name} requires a value`);
   }
   return value;
+}
+
+function parseFlags(args, name) {
+  const values = [];
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] !== name) continue;
+    const value = args[i + 1];
+    if (!value || value.startsWith("--")) {
+      throw new Error(`${name} requires a value`);
+    }
+    values.push(value);
+    i += 1;
+  }
+  return values;
+}
+
+function splitList(value) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function scopeParams(args) {
@@ -268,13 +290,69 @@ async function automationRuns(args) {
 
 async function reportRunnerStatus(args) {
   const bodyFile = parseFlag(args, "--body");
-  if (!bodyFile) throw new Error("--body payload.json is required");
-  const body = JSON.parse(readFileSync(resolve(bodyFile), "utf8"));
+  const body = bodyFile
+    ? JSON.parse(readFileSync(resolve(bodyFile), "utf8"))
+    : {};
+  const { modelId, productId } = scopeParams(args);
+  if (modelId && !body.modelId) body.modelId = modelId;
+  if (productId && !body.productId) body.productId = productId;
+
+  const runtime =
+    parseFlag(args, "--runtime") ||
+    process.env.HYPERGEN_AGENT_RUNTIME ||
+    (!bodyFile ? "Codex" : "");
+  if (runtime && !body.runtime) body.runtime = runtime;
+
+  const runnerVersion = parseFlag(args, "--runner-version");
+  const skillVersion = parseFlag(args, "--skill-version");
+  if (runnerVersion) body.runnerVersion = runnerVersion;
+  if (skillVersion) body.skillVersion = skillVersion;
+  if (args.includes("--offline")) body.online = false;
+  else if (!bodyFile && body.online === undefined) body.online = true;
+
+  const capabilities = [
+    ...splitList(parseFlag(args, "--capabilities")),
+    ...parseFlags(args, "--capability"),
+  ];
+  if (capabilities.length) body.capabilities = capabilities;
+
+  const browserName = parseFlag(args, "--browser");
+  const browserPermission = parseFlag(args, "--browser-permission");
+  const browserVerifiedAt = parseFlag(args, "--browser-verified-at");
+  if (browserName || browserPermission || browserVerifiedAt) {
+    body.browser = {
+      ...(body.browser || {}),
+      ...(browserName ? { name: browserName } : {}),
+      ...(browserPermission ? { permission: browserPermission } : {}),
+      ...(browserVerifiedAt
+        ? { lastVerifiedAt: browserVerifiedAt }
+        : browserPermission === "verified"
+          ? { lastVerifiedAt: new Date().toISOString() }
+          : {}),
+    };
+  }
+
+  const socialSessions = parseFlags(args, "--social").map(parseSocialSession);
+  if (socialSessions.length) body.socialSessions = socialSessions;
+
   const result = await api(`${API_PREFIX}/agent-runner-status`, {
     method: "PUT",
     body: JSON.stringify(body),
   });
   console.log(JSON.stringify(result, null, 2));
+}
+
+function parseSocialSession(value) {
+  const [platform, status = "unknown", handle = ""] = String(value).split(":");
+  if (!platform) {
+    throw new Error("--social requires platform:status[:handle]");
+  }
+  return {
+    platform,
+    status,
+    ...(handle ? { handle } : {}),
+    ...(status === "logged_in" ? { lastVerifiedAt: new Date().toISOString() } : {}),
+  };
 }
 
 async function permissions(args) {
@@ -349,6 +427,7 @@ async function selfTest() {
     ["README.md", "hypergen-agent verify --model-id"],
     ["README.md", "hypergen-agent status --model-id"],
     ["README.md", "hypergen-agent report-runner-status --body"],
+    ["README.md", "--browser-permission verified"],
     ["README.md", "verify` calls `/skill/hypergen/hello?message=hello` first"],
     ["README.md", "403 SCOPE_MISMATCH"],
     ["README.md", "HyperGen cannot grant Safari"],
@@ -375,6 +454,7 @@ async function selfTest() {
     ["references/image-references.md", "reference"],
     ["scripts/hypergen-agent.mjs", "status: statusCommand"],
     ["scripts/hypergen-agent.mjs", "reportRunnerStatus"],
+    ["scripts/hypergen-agent.mjs", "parseSocialSession"],
     ["scripts/hypergen-agent.mjs", "api(`${API_PREFIX}/hello?message=hello`)"],
     ["scripts/hypergen-agent.mjs", "parseFlag(args, \"--product-id\")"],
   ];

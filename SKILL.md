@@ -227,7 +227,7 @@ Use this before every paid generation request. Do not guess alternate flags.
    - Before each live action, call `POST /skill/hypergen/agent-permissions/check` or `node scripts/hypergen-agent.mjs check-permission --body payload.json`.
    - Act only when the permission response says `allowed: true`.
    - After each action or skipped action, call `POST /skill/hypergen/agent-events` or `node scripts/hypergen-agent.mjs log-event --body payload.json`.
-   - After verifying local browser access and platform login, call `PUT /skill/hypergen/agent-runner-status` or `node scripts/hypergen-agent.mjs report-runner-status --body runner-status.json`.
+   - After verifying local browser access and platform login, call `PUT /skill/hypergen/agent-runner-status`, `node scripts/hypergen-agent.mjs report-runner-status --body runner-status.json`, or the simple flag form: `node scripts/hypergen-agent.mjs report-runner-status --model-id <MODEL_ID> --runtime Codex --browser Safari --browser-permission verified --social instagram:logged_in:luna`.
    - Log every engagement run in `engagement/logs/` and HyperGen agent events.
 
 Model-only jobs are stored internally as `type: "product"` with `meta.solo: true`.

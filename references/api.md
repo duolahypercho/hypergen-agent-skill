@@ -331,6 +331,19 @@ platform login state. Do not send cookies, passwords, or session tokens.
 
 Endpoint: `PUT ${HYPERGEN_API_BASE}/skill/hypergen/agent-runner-status`.
 
+CLI shortcut:
+
+```bash
+node scripts/hypergen-agent.mjs report-runner-status \
+  --model-id "$HYPERGEN_MODEL_ID" \
+  --runtime Codex \
+  --browser Safari \
+  --browser-permission verified \
+  --capability browser_automation \
+  --capability social_engagement \
+  --social instagram:logged_in:luna
+```
+
 The `/skill/hypergen/agent-status` response includes the latest `runner`
 heartbeat. Treat `runner.online` as fresh only while the heartbeat has not gone
 stale.
