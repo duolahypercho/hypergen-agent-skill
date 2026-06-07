@@ -38,6 +38,12 @@ Do not use product-on-model fields for this. The request must include
 `intent: "model-image"`. Use `scene` for the creative direction. `prompt` is
 allowed only as a full override when the user explicitly needs one.
 
+Before asking for approval, quote credit cost only from the live catalog's
+matching `creditCost` for the selected `modelChoice`, multiplied by `count`.
+Never infer cost from `count`, engine name, or memory. If the catalog cost
+cannot be resolved, say cost unknown and ask without a number. After completion,
+report only the job response's `creditsUsed`.
+
 ```json
 {
   "intent": "model-image",

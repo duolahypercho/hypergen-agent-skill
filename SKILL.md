@@ -181,7 +181,7 @@ Treat `hypergen.requests.json` as authoritative when present.
 2. Verify API key with catalog on the API host.
 3. Load hosted docs/catalog if credentials and IDs are available.
 4. Check credits and active model/product reads.
-5. Before paid generation, show the request body and credit cost if known.
+5. Before paid generation, show the request body and quote credit cost only from the live catalog's matching `creditCost` (and video duration rules when relevant). If the live catalog cost cannot be resolved, say cost unknown and ask without a number.
 6. Ask before spending credits unless the user explicitly authorized generation.
 7. After creating a job, poll until `completed` or `failed`.
 8. Return real job IDs, credit usage, and media URLs only from live API responses.
@@ -189,6 +189,7 @@ Treat `hypergen.requests.json` as authoritative when present.
 ## Generation Defaults
 
 - Use Grok for ordinary image generation/editing unless the user is creating a new people-specific reusable model identity.
+- Never estimate generation cost from `count`, engine name, or memory. Report final credit usage only from the completed job's `creditsUsed`.
 - Model-only posts default to blurry low-light phone selfie / camera-roll style: close cropped, soft focus, visible grain/noise, imperfect indoor light, compressed phone texture, and slightly off-center framing.
 - Model clothing can differ naturally between posts like a real person; preserve the exact outfit only when the user asks for outfit continuity.
 - Business/product posts default to cleaner polished UGC or catalog-quality product imagery with accurate product shape, colors, materials, logos, and scale. Do not apply the blurry model-selfie default to business/product shots unless requested.
