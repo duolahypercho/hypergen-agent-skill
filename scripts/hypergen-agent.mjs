@@ -15,6 +15,17 @@ const ENGAGEMENT_REPO =
 const BROWSER_PERMISSIONS = ["unknown", "not_verified", "verified"];
 const SOCIAL_PLATFORMS = ["instagram", "tiktok", "youtube"];
 const SOCIAL_STATUSES = ["unknown", "not_logged_in", "logged_in"];
+const SENSITIVE_METADATA_KEYS = [
+  "authorization",
+  "cookie",
+  "password",
+  "session",
+  "sessiontoken",
+  "token",
+  "accesstoken",
+  "refreshtoken",
+  "secret",
+];
 
 const commands = {
   help,
@@ -123,6 +134,36 @@ function splitList(value) {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function isSensitiveMetadataKey(key) {
+  const normalized = String(key).toLowerCase().replace(/[^a-z0-9]/g, "");
+  return SENSITIVE_METADATA_KEYS.some((sensitive) =>
+    normalized.includes(sensitive)
+  );
+}
+
+function cleanMetadata(value, depth = 0) {
+  if (!value || typeof value !== "object" || Array.isArray(value) || depth > 2) {
+    return {};
+  }
+  const cleaned = {};
+  for (const [key, raw] of Object.entries(value).slice(0, 30)) {
+    const cleanKey = String(key || "").trim().slice(0, 80);
+    if (!cleanKey || isSensitiveMetadataKey(cleanKey)) continue;
+    if (raw === null || typeof raw === "boolean" || typeof raw === "number") {
+      cleaned[cleanKey] = raw;
+    } else if (typeof raw === "string") {
+      cleaned[cleanKey] = raw.slice(0, 500);
+    } else if (Array.isArray(raw)) {
+      cleaned[cleanKey] = raw
+        .filter((item) => ["string", "number", "boolean"].includes(typeof item))
+        .slice(0, 20);
+    } else if (typeof raw === "object") {
+      cleaned[cleanKey] = cleanMetadata(raw, depth + 1);
+    }
+  }
+  return cleaned;
 }
 
 function scopeParams(args) {
@@ -347,6 +388,7 @@ async function reportRunnerStatus(args) {
 
   const socialSessions = parseFlags(args, "--social").map(parseSocialSession);
   if (socialSessions.length) body.socialSessions = socialSessions;
+  if (body.metadata) body.metadata = cleanMetadata(body.metadata);
 
   if (args.includes("--dry-run")) {
     console.log(JSON.stringify(body, null, 2));
@@ -486,6 +528,8 @@ async function selfTest() {
     ["scripts/hypergen-agent.mjs", "error instanceof Error ? error.message"],
     ["scripts/hypergen-agent.mjs", "BROWSER_PERMISSIONS"],
     ["scripts/hypergen-agent.mjs", "SOCIAL_STATUSES"],
+    ["scripts/hypergen-agent.mjs", "SENSITIVE_METADATA_KEYS"],
+    ["scripts/hypergen-agent.mjs", "cleanMetadata"],
     ["scripts/hypergen-agent.mjs", "api(`${API_PREFIX}/hello?message=hello`)"],
     ["scripts/hypergen-agent.mjs", "parseFlag(args, \"--product-id\")"],
   ];

@@ -284,7 +284,8 @@ Allowed `--browser-permission` values are `unknown`, `not_verified`, and
 `youtube`; allowed statuses are `unknown`, `not_logged_in`, and `logged_in`.
 Do not put cookies, passwords, API keys, OAuth tokens, session tokens, or raw
 browser storage in runner metadata. HyperGen only needs readiness status, not
-private session material.
+private session material. The CLI strips sensitive metadata keys before dry-run
+output or API submission, but agents should avoid collecting them at all.
 
 Install the engagement add-on:
 

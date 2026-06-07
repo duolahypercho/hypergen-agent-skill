@@ -349,6 +349,9 @@ Remove `--dry-run` after reviewing the payload to send the heartbeat.
 Allowed browser permissions: `unknown`, `not_verified`, `verified`.
 Allowed social platforms: `instagram`, `tiktok`, `youtube`.
 Allowed social statuses: `unknown`, `not_logged_in`, `logged_in`.
+The CLI strips sensitive metadata keys before dry-run output or API submission,
+but local agents should avoid collecting cookies, passwords, API keys, OAuth
+tokens, session tokens, or raw browser storage.
 
 The `/skill/hypergen/agent-status` response includes the latest `runner`
 heartbeat. Treat `runner.online` as fresh only while the heartbeat has not gone
