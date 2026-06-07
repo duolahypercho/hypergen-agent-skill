@@ -617,6 +617,10 @@ async function selfTest() {
     ["references/api.md", "HyperGen cannot grant private local browser"],
     ["references/engagement.md", "HyperGen permission is not an operating-system permission"],
     ["references/image-references.md", "reference"],
+    ["hooks/pre-chat.sh", "scripts/check_updates.sh"],
+    ["scripts/check_updates.sh", "git fetch --quiet"],
+    ["scripts/check_updates.sh", "updates available"],
+    ["scripts/check_updates.sh", "Ask the user before running: git pull --ff-only"],
     ["scripts/hypergen-agent.mjs", "status: statusCommand"],
     ["scripts/hypergen-agent.mjs", "channels"],
     ["scripts/hypergen-agent.mjs", "runnerStatus"],
@@ -639,6 +643,16 @@ async function selfTest() {
   for (const [file, snippet] of requiredSnippets) {
     const source = readFileSync(resolve(skillDir, file), "utf8");
     if (!source.includes(snippet)) failures.push(`${file} missing ${snippet}`);
+  }
+  const updateScript = readFileSync(
+    resolve(skillDir, "scripts/check_updates.sh"),
+    "utf8"
+  );
+  const executablePull = updateScript
+    .split("\n")
+    .some((line) => line.trim().startsWith("git pull"));
+  if (executablePull) {
+    failures.push("scripts/check_updates.sh must not run git pull automatically");
   }
   if (failures.length) {
     console.error("hypergen-agent skill self-test failed:");
