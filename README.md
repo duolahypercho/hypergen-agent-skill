@@ -63,8 +63,12 @@ Never run generation or polling scripts with `set -x`; it can print secrets.
 ```bash
 hypergen-agent check-updates
 hypergen-agent verify --model-id <MODEL_ID>
+hypergen-agent status --model-id <MODEL_ID>
 hypergen-agent download-docs --model-id <MODEL_ID> --out ./agent-workspace
 ```
+
+`verify` calls `/skill/hypergen/hello?message=hello` first, then checks catalog,
+credits, agent status, and the selected model/product context.
 
 The API host is `https://api.hypercho.com` and agent routes use
 `/skill/hypergen`. Do not call bare `/generate`, `/credits`, `/jobs`, or
@@ -87,7 +91,7 @@ hypergen-agent poll --job-id <JOB_ID>
 Review employee-mode automation:
 
 ```bash
-hypergen-agent automations --model-id <MODEL_ID>
+hypergen-agent automations --model-id <MODEL_ID> --product-id <PRODUCT_ID>
 ```
 
 Save employee-mode automation:
@@ -100,6 +104,12 @@ Check local engagement permission:
 
 ```bash
 hypergen-agent check-permission --body permission-check.json
+```
+
+Read current agent-side request/media/post totals:
+
+```bash
+hypergen-agent status --model-id <MODEL_ID> --product-id <PRODUCT_ID>
 ```
 
 Log a local engagement/posting event:

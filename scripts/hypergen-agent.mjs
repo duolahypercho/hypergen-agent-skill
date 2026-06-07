@@ -17,6 +17,7 @@ const commands = {
   help,
   "check-updates": checkUpdates,
   verify,
+  status: statusCommand,
   "download-docs": downloadDocs,
   "install-engagement": installEngagement,
   automations,
@@ -47,16 +48,17 @@ function help() {
 
 Usage:
   hypergen-agent check-updates
-  hypergen-agent verify [--model-id ID]
+  hypergen-agent verify [--model-id ID] [--product-id ID]
+  hypergen-agent status [--model-id ID] [--product-id ID]
   hypergen-agent download-docs --model-id ID [--out DIR]
   hypergen-agent install-engagement [--out DIR]
-  hypergen-agent automations [--model-id ID]
+  hypergen-agent automations [--model-id ID] [--product-id ID]
   hypergen-agent save-automation --body payload.json
   hypergen-agent run-automation --id ID
   hypergen-agent automation-runs --id ID
-  hypergen-agent permissions [--model-id ID]
+  hypergen-agent permissions [--model-id ID] [--product-id ID]
   hypergen-agent check-permission --body payload.json
-  hypergen-agent events [--model-id ID]
+  hypergen-agent events [--model-id ID] [--product-id ID]
   hypergen-agent log-event --body payload.json
   hypergen-agent generate --body payload.json
   hypergen-agent poll --job-id ID
@@ -89,6 +91,16 @@ function parseFlag(args, name) {
     throw new Error(`${name} requires a value`);
   }
   return value;
+}
+
+function scopeParams(args) {
+  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
+  const productId =
+    parseFlag(args, "--product-id") || process.env.HYPERGEN_PRODUCT_ID;
+  const qs = new URLSearchParams();
+  if (modelId) qs.set("modelId", modelId);
+  if (productId) qs.set("productId", productId);
+  return { modelId, productId, suffix: qs.toString() ? `?${qs.toString()}` : "" };
 }
 
 async function api(path, options = {}) {
@@ -138,15 +150,19 @@ async function checkUpdates() {
 }
 
 async function verify(args) {
-  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
-  const [catalog, credits] = await Promise.all([
+  const { modelId, productId, suffix } = scopeParams(args);
+  const hello = await api(`${API_PREFIX}/hello?message=hello`);
+  const [catalog, credits, status] = await Promise.all([
     api(`${API_PREFIX}/catalog`),
     api(`${API_PREFIX}/credits`),
+    api(`${API_PREFIX}/agent-status${suffix}`),
   ]);
   const output = {
     apiBase: API_BASE,
+    hello: hello?.data,
     catalogOk: Boolean(catalog?.success),
     credits: credits?.data,
+    status: status?.data,
   };
   if (modelId) {
     const model = await api(`${API_PREFIX}/models/${encodeURIComponent(modelId)}`);
@@ -156,7 +172,21 @@ async function verify(args) {
       handle: model?.data?.handle,
     };
   }
+  if (productId) {
+    const product = await api(`${API_PREFIX}/products/${encodeURIComponent(productId)}`);
+    output.product = {
+      productId: product?.data?.productId,
+      name: product?.data?.name,
+      handle: product?.data?.handle,
+    };
+  }
   console.log(JSON.stringify(output, null, 2));
+}
+
+async function statusCommand(args) {
+  const { suffix } = scopeParams(args);
+  const result = await api(`${API_PREFIX}/agent-status${suffix}`);
+  console.log(JSON.stringify(result, null, 2));
 }
 
 async function downloadDocs(args) {
@@ -202,10 +232,7 @@ async function installEngagement(args) {
 }
 
 async function automations(args) {
-  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
-  const qs = new URLSearchParams();
-  if (modelId) qs.set("modelId", modelId);
-  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  const { suffix } = scopeParams(args);
   const result = await api(`${API_PREFIX}/agent-automations${suffix}`);
   console.log(JSON.stringify(result, null, 2));
 }
@@ -238,10 +265,7 @@ async function automationRuns(args) {
 }
 
 async function permissions(args) {
-  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
-  const qs = new URLSearchParams();
-  if (modelId) qs.set("modelId", modelId);
-  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  const { suffix } = scopeParams(args);
   const result = await api(`${API_PREFIX}/agent-permissions${suffix}`);
   console.log(JSON.stringify(result, null, 2));
 }
@@ -258,10 +282,7 @@ async function checkPermission(args) {
 }
 
 async function events(args) {
-  const modelId = parseFlag(args, "--model-id") || process.env.HYPERGEN_MODEL_ID;
-  const qs = new URLSearchParams();
-  if (modelId) qs.set("modelId", modelId);
-  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  const { suffix } = scopeParams(args);
   const result = await api(`${API_PREFIX}/agent-events${suffix}`);
   console.log(JSON.stringify(result, null, 2));
 }
@@ -313,6 +334,8 @@ async function selfTest() {
   const requiredSnippets = [
     ["README.md", "## Install"],
     ["README.md", "hypergen-agent verify --model-id"],
+    ["README.md", "hypergen-agent status --model-id"],
+    ["README.md", "verify` calls `/skill/hypergen/hello?message=hello` first"],
     ["README.md", "403 SCOPE_MISMATCH"],
     ["README.md", "HyperGen cannot grant Safari"],
     ["README.md", "Prefer `jobIds`"],
@@ -333,6 +356,9 @@ async function selfTest() {
     ["references/api.md", "HyperGen cannot grant private local browser"],
     ["references/engagement.md", "HyperGen permission is not an operating-system permission"],
     ["references/image-references.md", "reference"],
+    ["scripts/hypergen-agent.mjs", "status: statusCommand"],
+    ["scripts/hypergen-agent.mjs", "api(`${API_PREFIX}/hello?message=hello`)"],
+    ["scripts/hypergen-agent.mjs", "parseFlag(args, \"--product-id\")"],
   ];
   const failures = [];
   for (const [file, snippet] of requiredSnippets) {
